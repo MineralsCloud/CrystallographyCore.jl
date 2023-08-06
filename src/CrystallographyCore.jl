@@ -1,5 +1,8 @@
 module CrystallographyCore
 
-# Write your package code here.
+include("lattice.jl")
+include("cell.jl")
+include("eachatom.jl")
+include("show.jl")
 
 end
