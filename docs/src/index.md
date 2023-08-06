@@ -57,6 +57,7 @@ a few guidelines that should be followed when opening pull requests and contribu
 Pages = [
     "man/installation.md",
     "man/troubleshooting.md",
+    "man/definitions.md",
     "developers/contributing.md",
     "developers/style-guide.md",
     "developers/design-principles.md",
