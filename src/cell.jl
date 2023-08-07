@@ -44,5 +44,3 @@ atomtypes(cell::Cell) = unique(cell.atoms)
 Get the lattice of a `Cell`.
 """
 Lattice(cell::Cell) = cell.lattice
-
-basisvectors(cell::AbstractCell) = basisvectors(cell.lattice)
