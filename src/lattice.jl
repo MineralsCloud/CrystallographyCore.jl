@@ -10,6 +10,10 @@ Represent the real lattices and the reciprocal lattices.
 abstract type AbstractLattice{T} <: AbstractMatrix{T} end
 struct Lattice{T} <: AbstractLattice{T}
     data::MMatrix{3,3,T,9}
+    function Lattice{T}(data) where {T}
+        @assert !iszero(det3x3(data)) "lattice is singular!"
+        return new(data)
+    end
 end
 """
     Lattice(data::AbstractMatrix)
@@ -19,7 +23,7 @@ Construct a `Lattice` from a matrix.
 !!! note
     The basis vectors of the matrix are stored as columns.
 """
-Lattice(data::AbstractMatrix) = Lattice(MMatrix{3,3}(data))
+Lattice(data::AbstractMatrix{T}) where {T} = Lattice{T}(MMatrix{3,3,T}(data))
 """
     Lattice(𝐚::AbstractVector, 𝐛::AbstractVector, 𝐜::AbstractVector)
 
@@ -56,3 +60,9 @@ Base.similar(
     bc::Broadcast.Broadcasted{Broadcast.ArrayStyle{Lattice}}, ::Type{S}
 ) where {S} = similar(Lattice{S}, axes(bc))
 Lattice{S}(::UndefInitializer, dims) where {S} = Lattice(Array{S,length(dims)}(undef, dims))
+
+# `LinearAlgebra.det` is much slower and more inaccurate than my simple `det3x3`.
+function det3x3(matrix)
+    a, d, g, b, e, h, c, f, i = matrix  # Only works for 3×3 matrices
+    return a * e * i + b * f * g + c * d * h - c * e * g - b * d * i - a * f * h
+end
