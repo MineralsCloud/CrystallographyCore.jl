@@ -31,12 +31,19 @@ Construct a `Lattice` from three basis vectors.
 """
 Lattice(𝐚::AbstractVector, 𝐛::AbstractVector, 𝐜::AbstractVector) = Lattice(hcat(𝐚, 𝐛, 𝐜))
 """
-    Lattice(basisvectors::AbstractVector{<:AbstractVector})
+    Lattice(data)
 
-Construct a `Lattice` from a vector of three basis vectors.
+Construct a `Lattice` from, e.g., a vector of three basis vectors.
 """
-Lattice(basisvectors::AbstractVector{<:AbstractVector}) =
-    Lattice(reduce(hcat, basisvectors))
+function Lattice(data)
+    if length(data) == 9  # Works for `NTuple{9}` and generators
+        return Lattice(MMatrix{3,3}(data))
+    elseif length(data) == 3  # Works for `NTuple{3}` & vector of vectors
+        return Lattice(mapreduce(collect, hcat, data))
+    else
+        throw(ArgumentError("`data` shape is not recognized!"))
+    end
+end
 
 """
     basisvectors(lattice::Lattice)
