@@ -1,7 +1,7 @@
 using StaticArrays: MVector
 using StructEquality: @struct_hash_equal_isequal_isapprox
 
-export natoms, atomtypes
+export Cell, natoms, atomtypes
 
 abstract type AbstractCell end
 """
