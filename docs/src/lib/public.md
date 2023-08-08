@@ -15,9 +15,16 @@ Pages = ["public.md"]
 
 ## Public interface
 
+### Lattices
+
 ```@docs
 Lattice
 basisvectors
+```
+
+### Cells
+
+```@docs
 Cell
 eachatom
 ```
