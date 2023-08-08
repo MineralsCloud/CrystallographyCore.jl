@@ -2,7 +2,7 @@ using StaticArrays: MMatrix
 using Unitful, UnitfulAtomic
 
 @testset "Constructing `Lattice`s" begin
-    @testset "With matrix" begin
+    @testset "with matrix" begin
         # General 3x3 matrix
         mat = [
             1.2 4.5 7.8
@@ -41,7 +41,7 @@ using Unitful, UnitfulAtomic
         2.2 5.5 8.8
         3.1 6.5 9.9
     ])
-    @testset "With general iterables" begin
+    @testset "with general iterables" begin
         # Tuple with 9 values
         vals = (1.1, 2.2, 3.1, 4.4, 5.5, 6.5, 7.3, 8.8, 9.9)
         @test Lattice(vals) == Lattice([
@@ -71,19 +71,16 @@ using Unitful, UnitfulAtomic
             3 6 9
         ] * 1.1)
     end
-end
-
-@testset "Test creating `Lattice`s with units" begin
-    lattice = Lattice(
-        [
+    @testset "with units" begin
+        lattice = Lattice([
+            [4u"nm", 0u"m", 0.0u"cm"],
+            [0u"cm", 180.0u"bohr", 0u"m"],
+            [0u"bohr", 0u"nm", (3//1) * u"angstrom"],
+        ])
+        @test lattice.data == [
             4u"nm" 0u"m" 0.0u"cm"
             0u"cm" 180.0u"bohr" 0u"m"
             0u"bohr" 0u"nm" (3//1)*u"angstrom"
         ]
-    )
-    @test lattice.data == [
-        4u"nm" 0u"m" 0.0u"cm"
-        0u"cm" 180.0u"bohr" 0u"m"
-        0u"bohr" 0u"nm" (3//1)*u"angstrom"
-    ]
+    end
 end
