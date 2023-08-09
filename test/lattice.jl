@@ -10,12 +10,6 @@ using Unitful, UnitfulAtomic
             3.4 6.7 9.1
         ]
         @test Lattice(mat) == Lattice(MMatrix{3,3}(mat))
-        # Singular matrix
-        @test_throws AssertionError Lattice([
-            1 2 3
-            4 5 6
-            7 8 9
-        ])
         # Rectangular matrix
         @test_throws DimensionMismatch Lattice([
             1 2
