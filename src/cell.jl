@@ -1,8 +1,6 @@
 using StaticArrays: MVector
 using StructEquality: @struct_hash_equal_isequal
 
-export Cell, natoms, atomtypes
-
 abstract type AbstractCell end
 """
     Cell(lattice, positions, atoms)
