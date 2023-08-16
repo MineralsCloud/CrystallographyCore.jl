@@ -1,7 +1,7 @@
 name = "CrystallographyCore"
 uuid = "80545937-1184-4bc9-b283-396e91386b5c"
 authors = ["singularitti <singularitti@outlook.com> and contributors"]
-version = "0.1.0"
+version = "0.1.1"
 
 [deps]
 StaticArrays = "90137ffa-7385-5640-81b9-e52037218182"
