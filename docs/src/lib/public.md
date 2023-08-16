@@ -18,13 +18,13 @@ Pages = ["public.md"]
 ### Lattices
 
 ```@docs
-Lattice
-basisvectors
+CrystallographyCore.Lattice
+CrystallographyCore.basisvectors
 ```
 
 ### Cells
 
 ```@docs
-Cell
-eachatom
+CrystallographyCore.Cell
+CrystallographyCore.eachatom
 ```
