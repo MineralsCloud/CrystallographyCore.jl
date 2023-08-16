@@ -30,7 +30,7 @@ julia> Lattice([
  3.4  6.7  9.1
 ```
 """
-Lattice(data::AbstractMatrix{T}) where {T} = Lattice{T}(MMatrix{3,3,T}(data))
+Lattice(data::AbstractMatrix) = Lattice(MMatrix{3,3}(data))
 """
     Lattice(𝐚::AbstractVector, 𝐛::AbstractVector, 𝐜::AbstractVector)
 
