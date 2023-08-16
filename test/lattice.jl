@@ -1,3 +1,4 @@
+using CrystallographyCore: Lattice, basisvectors
 using StaticArrays: MMatrix
 using Unitful, UnitfulAtomic
 
@@ -10,6 +11,8 @@ using Unitful, UnitfulAtomic
             3.4 6.7 9.1
         ]
         @test Lattice(mat) == Lattice(MMatrix{3,3}(mat))
+        @test basisvectors(Lattice(mat)) ==
+            ([1.2, 2.3, 3.4], [4.5, 5.6, 6.7], [7.8, 8.9, 9.1])
         # Rectangular matrix
         @test_throws DimensionMismatch Lattice([
             1 2
@@ -35,6 +38,7 @@ using Unitful, UnitfulAtomic
         2.2 5.5 8.8
         3.1 6.5 9.9
     ])
+    @test basisvectors(Lattice(a, b, c)) == (a, b, c)
     @testset "with general iterables" begin
         # Tuple with 9 values
         vals = (1.1, 2.2, 3.1, 4.4, 5.5, 6.5, 7.3, 8.8, 9.9)
@@ -57,6 +61,8 @@ using Unitful, UnitfulAtomic
             2.3 5.6 8.9
             3.4 6.7 9.1
         ])
+        @test basisvectors(Lattice(vals)) ==
+            ([1.2, 2.3, 3.4], [4.5, 5.6, 6.7], [7.8, 8.9, 9.1])
         # Generator of 9 values
         vals = (i * 1.1 for i in 1:9)
         @test Lattice(vals) == Lattice([
@@ -76,5 +82,10 @@ using Unitful, UnitfulAtomic
             0u"cm" 180.0u"bohr" 0u"m"
             0u"bohr" 0u"nm" (3//1)*u"angstrom"
         ]
+        @test basisvectors(lattice) == (
+            [4u"nm", 0u"m", 0.0u"cm"],
+            [0u"cm", 180.0u"bohr", 0u"m"],
+            [0u"bohr", 0u"nm", (3//1) * u"angstrom"],
+        )
     end
 end
