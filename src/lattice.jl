@@ -6,7 +6,7 @@ using StaticArrays: MMatrix
 Represent the real lattices and the reciprocal lattices.
 """
 abstract type AbstractLattice{T} <: AbstractMatrix{T} end
-struct Lattice{T} <: AbstractLattice{T}
+mutable struct Lattice{T} <: AbstractLattice{T}
     data::MMatrix{3,3,T,9}
 end
 """
