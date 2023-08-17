@@ -117,9 +117,9 @@ eachbasisvector(lattice::Lattice) = eachcol(lattice)
 
 Base.parent(lattice::Lattice) = lattice.data
 
-Base.getindex(op::Lattice, i::Int) = getindex(parent(op), i)
+Base.getindex(lattice::Lattice, i::Int) = getindex(parent(lattice), i)
 
-Base.setindex!(op::Lattice, v, i::Int) = setindex!(parent(op), v, i)
+Base.setindex!(lattice::Lattice, v, i::Int) = setindex!(parent(lattice), v, i)
 
 # Customizing broadcasting
 # See https://github.com/JuliaArrays/StaticArraysCore.jl/blob/v1.4.2/src/StaticArraysCore.jl#L397-L398
@@ -133,19 +133,19 @@ Base.BroadcastStyle(::Type{<:Lattice}) = LatticeStyle()
 Base.similar(::Broadcast.Broadcasted{LatticeStyle}, ::Type{T}) where {T} =
     similar(Lattice{T})
 # Override https://github.com/JuliaArrays/StaticArrays.jl/blob/v1.6.2/src/abstractarray.jl#L129
-function Base.similar(op::Lattice, ::Type{T}, _size::Size) where {T}
-    if _size == size(op)
+function Base.similar(lattice::Lattice, ::Type{T}, _size::Size) where {T}
+    if _size == size(lattice)
         Lattice{T}(undef)
     else
-        return similar(Array(op), T, _size)
+        return similar(Array(lattice), T, _size)
     end
 end
 # Override https://github.com/JuliaLang/julia/blob/v1.10.0-beta2/base/abstractarray.jl#L839
-function Base.similar(op::Lattice, ::Type{T}, dims::Dims) where {T}
-    if dims == size(op)
+function Base.similar(lattice::Lattice, ::Type{T}, dims::Dims) where {T}
+    if dims == size(lattice)
         Lattice{T}(undef)
     else
-        return similar(Array(op), T, dims)
+        return similar(Array(lattice), T, dims)
     end
 end
 function Base.similar(::Type{<:Lattice}, ::Type{T}, s::Size) where {T}
