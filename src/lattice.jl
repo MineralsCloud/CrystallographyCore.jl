@@ -96,15 +96,10 @@ julia> Lattice([
  0.0 m  0.0 m  3.0e-10 m
 ```
 """
-function Lattice(data)
-    if length(data) == 9  # Works for `NTuple{9}` and generators
-        return Lattice(MMatrix{3,3}(data))
-    elseif length(data) == 3  # Works for `NTuple{3}` & vector of vectors
-        return Lattice(mapreduce(collect, hcat, data))
-    else
-        throw(ArgumentError("`data` shape is not recognized!"))
-    end
-end
+Lattice(data::NTuple{9}) = Lattice(MMatrix{3,3}(data))
+Lattice(data::NTuple{3,NTuple{3}}) = Lattice(mapreduce(collect, hcat, data))
+Lattice(data::AbstractVector{<:AbstractVector}) = Lattice(mapreduce(collect, hcat, data))
+Lattice(iter::Base.Generator) = Lattice(MMatrix{3,3}(iter))
 
 """
     basisvectors(lattice::Lattice)
