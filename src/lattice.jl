@@ -1,5 +1,7 @@
 using StaticArrays: StaticMatrix, MMatrix, Size
 
+import Base: +, -, *, /
+
 """
     AbstractLattice{T} <: AbstractMatrix{T}
 
@@ -160,3 +162,19 @@ function Base.similar(::Type{<:Lattice}, ::Type{T}, dim, dims...) where {T}
         return Array{T}(undef, dim, dims...)
     end
 end
+
+# See https://github.com/JuliaArrays/StaticArrays.jl/blob/v1.6.2/src/linalg.jl#L7-L25
+@inline +(lattice::Lattice) = lattice
+@inline +(lattice₁::Lattice, lattice₂::Lattice) = lattice₁ .+ lattice₂
+@inline +(A::AbstractArray, lattice::Lattice) = A .+ lattice
+@inline +(lattice::Lattice, A::AbstractArray) = lattice .+ A
+
+@inline -(lattice::Lattice) = -1 .* lattice
+@inline -(lattice₁::Lattice, lattice₂::Lattice) = lattice₁ .- lattice₂
+@inline -(A::AbstractArray, lattice::Lattice) = A .- lattice
+@inline -(lattice::Lattice, A::AbstractArray) = lattice .- A
+
+@inline *(n::Number, lattice::Lattice) = n .* lattice
+@inline *(lattice::Lattice, n::Number) = n .* lattice
+
+@inline /(lattice::Lattice, n::Number) = lattice ./ n
