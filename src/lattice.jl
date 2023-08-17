@@ -9,6 +9,8 @@ abstract type AbstractLattice{T} <: StaticMatrix{3,3,T} end
 mutable struct Lattice{T} <: AbstractLattice{T}
     data::MMatrix{3,3,T,9}
 end
+# See https://github.com/JuliaArrays/StaticArraysCore.jl/blob/v1.4.2/src/StaticArraysCore.jl#L195-L198
+Lattice{T}(::UndefInitializer) where {T} = Lattice(MMatrix{3,3,T,9}(undef))
 """
     Lattice(data::AbstractMatrix)
 
