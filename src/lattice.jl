@@ -1,4 +1,4 @@
-using StaticArrays: StaticMatrix, MMatrix
+using StaticArrays: StaticMatrix, MMatrix, Size
 
 """
     AbstractLattice{T} <: AbstractMatrix{T}
@@ -124,9 +124,37 @@ struct LatticeStyle <: Broadcast.AbstractArrayStyle{2} end
 LatticeStyle(::Val{2}) = LatticeStyle()
 LatticeStyle(::Val{N}) where {N} = Broadcast.DefaultArrayStyle{N}()
 
+Base.BroadcastStyle(::Type{<:Lattice}) = LatticeStyle()
 
-Base.BroadcastStyle(::Type{<:Lattice}) = Broadcast.ArrayStyle{Lattice}()
-Base.similar(
-    bc::Broadcast.Broadcasted{Broadcast.ArrayStyle{Lattice}}, ::Type{S}
-) where {S} = similar(Lattice{S}, axes(bc))
-Lattice{S}(::UndefInitializer, dims) where {S} = Lattice(Array{S,length(dims)}(undef, dims))
+Base.similar(::Broadcast.Broadcasted{LatticeStyle}, ::Type{T}) where {T} =
+    similar(Lattice{T})
+# Override https://github.com/JuliaArrays/StaticArrays.jl/blob/v1.6.2/src/abstractarray.jl#L129
+function Base.similar(op::Lattice, ::Type{T}, _size::Size) where {T}
+    if _size == size(op)
+        Lattice{T}(undef)
+    else
+        return similar(Array(op), T, _size)
+    end
+end
+# Override https://github.com/JuliaLang/julia/blob/v1.10.0-beta2/base/abstractarray.jl#L839
+function Base.similar(op::Lattice, ::Type{T}, dims::Dims) where {T}
+    if dims == size(op)
+        Lattice{T}(undef)
+    else
+        return similar(Array(op), T, dims)
+    end
+end
+function Base.similar(::Type{<:Lattice}, ::Type{T}, s::Size) where {T}
+    if s == (3, 3)
+        Lattice{T}(undef)
+    else
+        return Array{T}(undef, Tuple(s))
+    end
+end
+function Base.similar(::Type{<:Lattice}, ::Type{T}, dim, dims...) where {T}
+    if (dim, dims...) == (3, 3)
+        Lattice{T}(undef)
+    else
+        return Array{T}(undef, dim, dims...)
+    end
+end
