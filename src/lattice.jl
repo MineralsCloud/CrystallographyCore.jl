@@ -109,15 +109,19 @@ Get the three primitive vectors from a `lattice`.
 """
 basisvectors(lattice::Lattice) = lattice[:, 1], lattice[:, 2], lattice[:, 3]
 
-Base.size(::AbstractLattice) = (3, 3)
+Base.parent(lattice::Lattice) = lattice.data
 
-Base.parent(lattice::AbstractLattice) = lattice.data
+Base.getindex(op::Lattice, i::Int) = getindex(parent(op), i)
 
-Base.getindex(lattice::AbstractLattice, i) = getindex(parent(lattice), i)
+Base.setindex!(op::Lattice, v, i::Int) = setindex!(parent(op), v, i)
 
-Base.setindex!(lattice::AbstractLattice, v, i) = setindex!(parent(lattice), v, i)
+# Customizing broadcasting
+# See https://github.com/JuliaArrays/StaticArraysCore.jl/blob/v1.4.2/src/StaticArraysCore.jl#L397-L398
+# and https://github.com/JuliaLang/julia/blob/v1.10.0-beta1/stdlib/LinearAlgebra/src/structuredbroadcast.jl#L7-L14
+struct LatticeStyle <: Broadcast.AbstractArrayStyle{2} end
+LatticeStyle(::Val{2}) = LatticeStyle()
+LatticeStyle(::Val{N}) where {N} = Broadcast.DefaultArrayStyle{N}()
 
-Base.IndexStyle(::Type{<:AbstractLattice}) = IndexLinear()
 
 Base.BroadcastStyle(::Type{<:Lattice}) = Broadcast.ArrayStyle{Lattice}()
 Base.similar(
