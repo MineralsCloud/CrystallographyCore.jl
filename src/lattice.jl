@@ -109,7 +109,9 @@ end
 
 Get the three primitive vectors from a `lattice`.
 """
-basisvectors(lattice::Lattice) = lattice[:, 1], lattice[:, 2], lattice[:, 3]
+basisvectors(lattice::Lattice) = Tuple(eachcol(lattice))
+
+eachbasisvector(lattice::Lattice) = eachcol(lattice)
 
 Base.parent(lattice::Lattice) = lattice.data
 
