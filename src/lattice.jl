@@ -1,14 +1,18 @@
-using StaticArrays: MMatrix
+using StaticArrays: StaticMatrix, MMatrix, Size
+
+import Base: +, -, *, /
 
 """
     AbstractLattice{T} <: AbstractMatrix{T}
 
 Represent the real lattices and the reciprocal lattices.
 """
-abstract type AbstractLattice{T} <: AbstractMatrix{T} end
+abstract type AbstractLattice{T} <: StaticMatrix{3,3,T} end
 mutable struct Lattice{T} <: AbstractLattice{T}
     data::MMatrix{3,3,T,9}
 end
+# See https://github.com/JuliaArrays/StaticArraysCore.jl/blob/v1.4.2/src/StaticArraysCore.jl#L195-L198
+Lattice{T}(::UndefInitializer) where {T} = Lattice(MMatrix{3,3,T,9}(undef))
 """
     Lattice(data::AbstractMatrix)
 
@@ -107,20 +111,70 @@ end
 
 Get the three primitive vectors from a `lattice`.
 """
-basisvectors(lattice::Lattice) = lattice[:, 1], lattice[:, 2], lattice[:, 3]
+basisvectors(lattice::Lattice) = Tuple(eachcol(lattice))
 
-Base.size(::AbstractLattice) = (3, 3)
+eachbasisvector(lattice::Lattice) = eachcol(lattice)
 
-Base.parent(lattice::AbstractLattice) = lattice.data
+Base.parent(lattice::Lattice) = lattice.data
 
-Base.getindex(lattice::AbstractLattice, i) = getindex(parent(lattice), i)
+Base.getindex(lattice::Lattice, i::Int) = getindex(parent(lattice), i)
 
-Base.setindex!(lattice::AbstractLattice, v, i) = setindex!(parent(lattice), v, i)
+Base.setindex!(lattice::Lattice, v, i::Int) = setindex!(parent(lattice), v, i)
 
-Base.IndexStyle(::Type{<:AbstractLattice}) = IndexLinear()
+# Customizing broadcasting
+# See https://github.com/JuliaArrays/StaticArraysCore.jl/blob/v1.4.2/src/StaticArraysCore.jl#L397-L398
+# and https://github.com/JuliaLang/julia/blob/v1.10.0-beta1/stdlib/LinearAlgebra/src/structuredbroadcast.jl#L7-L14
+struct LatticeStyle <: Broadcast.AbstractArrayStyle{2} end
+LatticeStyle(::Val{2}) = LatticeStyle()
+LatticeStyle(::Val{N}) where {N} = Broadcast.DefaultArrayStyle{N}()
 
-Base.BroadcastStyle(::Type{<:Lattice}) = Broadcast.ArrayStyle{Lattice}()
-Base.similar(
-    bc::Broadcast.Broadcasted{Broadcast.ArrayStyle{Lattice}}, ::Type{S}
-) where {S} = similar(Lattice{S}, axes(bc))
-Lattice{S}(::UndefInitializer, dims) where {S} = Lattice(Array{S,length(dims)}(undef, dims))
+Base.BroadcastStyle(::Type{<:Lattice}) = LatticeStyle()
+
+Base.similar(::Broadcast.Broadcasted{LatticeStyle}, ::Type{T}) where {T} =
+    similar(Lattice{T})
+# Override https://github.com/JuliaArrays/StaticArrays.jl/blob/v1.6.2/src/abstractarray.jl#L129
+function Base.similar(lattice::Lattice, ::Type{T}, _size::Size) where {T}
+    if _size == size(lattice)
+        Lattice{T}(undef)
+    else
+        return similar(Array(lattice), T, _size)
+    end
+end
+# Override https://github.com/JuliaLang/julia/blob/v1.10.0-beta2/base/abstractarray.jl#L839
+function Base.similar(lattice::Lattice, ::Type{T}, dims::Dims) where {T}
+    if dims == size(lattice)
+        Lattice{T}(undef)
+    else
+        return similar(Array(lattice), T, dims)
+    end
+end
+function Base.similar(::Type{<:Lattice}, ::Type{T}, s::Size) where {T}
+    if s == (3, 3)
+        Lattice{T}(undef)
+    else
+        return Array{T}(undef, Tuple(s))
+    end
+end
+function Base.similar(::Type{<:Lattice}, ::Type{T}, dim, dims...) where {T}
+    if (dim, dims...) == (3, 3)
+        Lattice{T}(undef)
+    else
+        return Array{T}(undef, dim, dims...)
+    end
+end
+
+# See https://github.com/JuliaArrays/StaticArrays.jl/blob/v1.6.2/src/linalg.jl#L7-L25
+@inline +(lattice::Lattice) = lattice
+@inline +(lattice₁::Lattice, lattice₂::Lattice) = lattice₁ .+ lattice₂
+@inline +(A::AbstractArray, lattice::Lattice) = A .+ lattice
+@inline +(lattice::Lattice, A::AbstractArray) = lattice .+ A
+
+@inline -(lattice::Lattice) = -1 .* lattice
+@inline -(lattice₁::Lattice, lattice₂::Lattice) = lattice₁ .- lattice₂
+@inline -(A::AbstractArray, lattice::Lattice) = A .- lattice
+@inline -(lattice::Lattice, A::AbstractArray) = lattice .- A
+
+@inline *(n::Number, lattice::Lattice) = n .* lattice
+@inline *(lattice::Lattice, n::Number) = n .* lattice
+
+@inline /(lattice::Lattice, n::Number) = lattice ./ n
