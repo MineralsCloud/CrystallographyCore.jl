@@ -1,11 +1,11 @@
-using StaticArrays: MMatrix
+using StaticArrays: StaticMatrix, MMatrix
 
 """
     AbstractLattice{T} <: AbstractMatrix{T}
 
 Represent the real lattices and the reciprocal lattices.
 """
-abstract type AbstractLattice{T} <: AbstractMatrix{T} end
+abstract type AbstractLattice{T} <: StaticMatrix{3,3,T} end
 mutable struct Lattice{T} <: AbstractLattice{T}
     data::MMatrix{3,3,T,9}
 end
