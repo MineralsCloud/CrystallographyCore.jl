@@ -8,11 +8,6 @@ import Base: +, -, *, /
 Represent the real lattices and the reciprocal lattices.
 """
 abstract type AbstractLattice{T} <: StaticMatrix{3,3,T} end
-mutable struct Lattice{T} <: AbstractLattice{T}
-    data::MMatrix{3,3,T,9}
-end
-# See https://github.com/JuliaArrays/StaticArraysCore.jl/blob/v1.4.2/src/StaticArraysCore.jl#L195-L198
-Lattice{T}(::UndefInitializer) where {T} = Lattice(MMatrix{3,3,T,9}(undef))
 """
     Lattice(data::AbstractMatrix)
 
@@ -34,6 +29,11 @@ julia> Lattice([
  3.4  6.7  9.1
 ```
 """
+mutable struct Lattice{T} <: AbstractLattice{T}
+    data::MMatrix{3,3,T,9}
+end
+# See https://github.com/JuliaArrays/StaticArraysCore.jl/blob/v1.4.2/src/StaticArraysCore.jl#L195-L198
+Lattice{T}(::UndefInitializer) where {T} = Lattice(MMatrix{3,3,T,9}(undef))
 """
     Lattice(𝐚::AbstractVector, 𝐛::AbstractVector, 𝐜::AbstractVector)
 
