@@ -98,8 +98,18 @@ julia> Lattice([
 """
 Lattice(data::NTuple{9}) = Lattice(MMatrix{3,3}(data))
 Lattice(data::NTuple{3,NTuple{3}}) = Lattice(mapreduce(collect, hcat, data))
-Lattice(data::AbstractVector{<:AbstractVector}) = Lattice(mapreduce(collect, hcat, data))
+Lattice(data::AbstractVector{<:AbstractVector}) = Lattice(hcat(data[1], data[2], data[3]))  # This is faster
 Lattice(iter::Base.Generator) = Lattice(MMatrix{3,3}(iter))
+function Lattice(data::Union{AbstractVector,Tuple})
+    if length(data) == 9
+        return Lattice(MMatrix{3,3}(data))
+    elseif length(data) == 3
+        @show mapreduce(collect, hcat, data)
+        return Lattice(mapreduce(collect, hcat, data))
+    else
+        throw(DimensionMismatch("The length of the tuple must be 3 or 9."))
+    end
+end
 
 """
     basisvectors(lattice::Lattice)
