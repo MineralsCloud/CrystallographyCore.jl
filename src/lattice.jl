@@ -33,6 +33,7 @@ julia> Lattice([
 ```
 """
 Lattice(data::AbstractMatrix) = Lattice(MMatrix{3,3}(data))
+Lattice(data::StaticMatrix) = convert(Lattice{eltype(data)}, data)
 # See https://github.com/JuliaArrays/StaticArraysCore.jl/blob/v1.4.2/src/StaticArraysCore.jl#L195-L198
 Lattice{T}(::UndefInitializer) where {T} = Lattice(MMatrix{3,3,T,9}(undef))
 """
