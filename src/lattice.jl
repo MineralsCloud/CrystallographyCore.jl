@@ -103,10 +103,15 @@ Lattice(iter::Base.Generator) = Lattice(MMatrix{3,3}(iter))
 """
     basisvectors(lattice::Lattice)
 
-Get the three primitive vectors from a `lattice`.
+Get the three basis vectors from a `lattice`.
 """
 basisvectors(lattice::Lattice) = Tuple(eachcol(lattice))
 
+"""
+    eachbasisvector(lattice::Lattice)
+
+Iterate over the three basis vectors of a `lattice`.
+"""
 eachbasisvector(lattice::Lattice) = eachcol(lattice)
 
 Base.parent(lattice::Lattice) = lattice.data
