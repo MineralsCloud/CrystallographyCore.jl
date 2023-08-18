@@ -105,7 +105,6 @@ function Lattice(data::Union{AbstractVector,Tuple})
     if length(data) == 9
         return Lattice(MMatrix{3,3}(data))
     elseif length(data) == 3
-        @show mapreduce(collect, hcat, data)
         return Lattice(mapreduce(collect, hcat, data))
     else
         throw(DimensionMismatch("The length of the tuple must be 3 or 9."))
