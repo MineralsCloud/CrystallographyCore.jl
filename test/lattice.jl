@@ -64,6 +64,9 @@ using Unitful, UnitfulAtomic
         ])
         @test basisvectors(Lattice(vals)) ==
             ([1.2, 2.3, 3.4], [4.5, 5.6, 6.7], [7.8, 8.9, 9.1])
+        # Vector of tuples
+        @test basisvectors(Lattice([(4.01, 0, 0), (0, 4, 0), (0, 0, 3.99)])) ==
+            ([4.01, 0, 0], [0, 4, 0], [0, 0, 3.99])
         # Generator of 9 values
         vals = (i * 1.1 for i in 1:9)
         @test Lattice(vals) == Lattice([
