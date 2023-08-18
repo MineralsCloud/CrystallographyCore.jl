@@ -13,6 +13,7 @@ using Unitful, UnitfulAtomic
         @test Lattice(mat) == Lattice(MMatrix{3,3}(mat))
         @test basisvectors(Lattice(mat)) ==
             ([1.2, 2.3, 3.4], [4.5, 5.6, 6.7], [7.8, 8.9, 9.1])
+        @test all(eachbasisvector(Lattice(mat))) .== basisvectors(Lattice(mat))
         # Rectangular matrix
         @test_throws DimensionMismatch Lattice([
             1 2
