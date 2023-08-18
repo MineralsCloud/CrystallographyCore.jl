@@ -20,6 +20,7 @@ Pages = ["public.md"]
 ```@docs
 CrystallographyCore.Lattice
 CrystallographyCore.basisvectors
+CrystallographyCore.eachbasisvector
 ```
 
 ### Cells
