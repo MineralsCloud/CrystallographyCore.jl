@@ -142,35 +142,21 @@ LatticeStyle(::Val{N}) where {N} = Broadcast.DefaultArrayStyle{N}()
 Base.BroadcastStyle(::Type{<:Lattice}) = LatticeStyle()
 
 Base.similar(::Broadcast.Broadcasted{LatticeStyle}, ::Type{T}) where {T} =
-    similar(Lattice{T})
-# Override https://github.com/JuliaArrays/StaticArrays.jl/blob/v1.6.2/src/abstractarray.jl#L129
-function Base.similar(lattice::Lattice, ::Type{T}, _size::Size) where {T}
-    if _size == size(lattice)
-        Lattice{T}(undef)
-    else
-        return similar(Array(lattice), T, _size)
-    end
-end
+    similar(Lattice{T}, 3, 3)
 # Override https://github.com/JuliaLang/julia/blob/v1.10.0-beta2/base/abstractarray.jl#L839
-function Base.similar(lattice::Lattice, ::Type{T}, dims::Dims) where {T}
-    if dims == size(lattice)
-        Lattice{T}(undef)
+function Base.similar(op::Lattice, ::Type{T}, dims::Dims) where {T}
+    if dims == size(op)
+        return Lattice(similar(Matrix{T}, dims))
     else
-        return similar(Array(lattice), T, dims)
+        throw(ArgumentError("invalid dims `$dims` for `Lattice`!"))
     end
 end
-function Base.similar(::Type{<:Lattice}, ::Type{T}, s::Size) where {T}
-    if s == (3, 3)
-        Lattice{T}(undef)
+# Override https://github.com/JuliaLang/julia/blob/v1.10.0-beta1/base/abstractarray.jl#L874
+function Base.similar(::Type{Lattice{T}}, dims::Dims) where {T}
+    if dims == (3, 3)
+        return Lattice(similar(Matrix{T}, dims))
     else
-        return Array{T}(undef, Tuple(s))
-    end
-end
-function Base.similar(::Type{<:Lattice}, ::Type{T}, dim, dims...) where {T}
-    if (dim, dims...) == (3, 3)
-        Lattice{T}(undef)
-    else
-        return Array{T}(undef, dim, dims...)
+        throw(ArgumentError("invalid dims `$dims` for `Lattice`!"))
     end
 end
 
