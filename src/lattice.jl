@@ -1,4 +1,4 @@
-using StaticArrays: StaticMatrix, MMatrix, Size
+using StaticArrays: MMatrix, Size
 
 import Base: +, -, *, /
 
@@ -7,7 +7,7 @@ import Base: +, -, *, /
 
 Represent the real lattices and the reciprocal lattices.
 """
-abstract type AbstractLattice{T} <: StaticMatrix{3,3,T} end
+abstract type AbstractLattice{T} <: AbstractMatrix{T} end
 """
     Lattice(data::AbstractMatrix)
 
