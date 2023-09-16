@@ -169,3 +169,7 @@ function Base.similar(::Type{Lattice{T}}, dims::Dims) where {T}
         throw(ArgumentError("invalid dims `$dims` for `Lattice`!"))
     end
 end
+
+Base.:*(::Lattice, ::Lattice) = error("undefined operation `*` for `Lattice`s!")
+
+Base.:/(::Lattice, ::Lattice) = error("undefined operation `/` for `Lattice`s!")
