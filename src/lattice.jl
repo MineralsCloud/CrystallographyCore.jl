@@ -1,13 +1,11 @@
-using StaticArrays: StaticMatrix, MMatrix, Size
-
-import Base: +, -, *, /
+using StaticArrays: MMatrix, SDiagonal
 
 """
     AbstractLattice{T} <: AbstractMatrix{T}
 
 Represent the real lattices and the reciprocal lattices.
 """
-abstract type AbstractLattice{T} <: StaticMatrix{3,3,T} end
+abstract type AbstractLattice{T} <: AbstractMatrix{T} end
 """
     Lattice(data::AbstractMatrix)
 
@@ -31,11 +29,8 @@ julia> Lattice([
 """
 mutable struct Lattice{T} <: AbstractLattice{T}
     data::MMatrix{3,3,T,9}
-    Lattice{T}(data::StaticMatrix{T}) where {T} = new(data)
-    Lattice(data::StaticMatrix) = new{eltype(data)}(MMatrix{3,3}(data))
 end
-# See https://github.com/JuliaArrays/StaticArraysCore.jl/blob/v1.4.2/src/StaticArraysCore.jl#L195-L198
-Lattice{T}(::UndefInitializer) where {T} = Lattice(MMatrix{3,3,T,9}(undef))
+Lattice(data::AbstractMatrix) = Lattice(MMatrix{3,3}(data))
 """
     Lattice(𝐚::AbstractVector, 𝐛::AbstractVector, 𝐜::AbstractVector)
 
@@ -125,11 +120,27 @@ Iterate over the three basis vectors of a `lattice`.
 """
 eachbasisvector(lattice::Lattice) = eachcol(lattice)
 
+# See https://github.com/JuliaLang/julia/blob/v1.10.0-beta1/stdlib/LinearAlgebra/src/uniformscaling.jl#L130-L131
+Base.one(::Type{Lattice{T}}) where {T} =
+    Lattice(MMatrix{3,3}(SDiagonal(one(T), one(T), one(T))))
+Base.one(lattice::Lattice) = one(typeof(lattice))
+
+# See https://github.com/JuliaLang/julia/blob/v1.10.0-beta1/stdlib/LinearAlgebra/src/uniformscaling.jl#L132-L133
+Base.oneunit(::Type{Lattice{T}}) where {T} =
+    Lattice(MMatrix{3,3}(SDiagonal(oneunit(T), oneunit(T), oneunit(T))))
+Base.oneunit(lattice::Lattice) = oneunit(typeof(lattice))
+
 Base.parent(lattice::Lattice) = lattice.data
 
+Base.size(::Lattice) = (3, 3)
+
 Base.getindex(lattice::Lattice, i::Int) = getindex(parent(lattice), i)
+Base.getindex(lattice::Lattice, I...) = getindex(parent(lattice), I...)
 
 Base.setindex!(lattice::Lattice, v, i::Int) = setindex!(parent(lattice), v, i)
+Base.setindex!(lattice::Lattice, X, I...) = setindex!(parent(lattice), X, I...)
+
+Base.IndexStyle(::Type{Lattice{T}}) where {T} = IndexLinear()
 
 # Customizing broadcasting
 # See https://github.com/JuliaArrays/StaticArraysCore.jl/blob/v1.4.2/src/StaticArraysCore.jl#L397-L398
@@ -141,50 +152,24 @@ LatticeStyle(::Val{N}) where {N} = Broadcast.DefaultArrayStyle{N}()
 Base.BroadcastStyle(::Type{<:Lattice}) = LatticeStyle()
 
 Base.similar(::Broadcast.Broadcasted{LatticeStyle}, ::Type{T}) where {T} =
-    similar(Lattice{T})
-# Override https://github.com/JuliaArrays/StaticArrays.jl/blob/v1.6.2/src/abstractarray.jl#L129
-function Base.similar(lattice::Lattice, ::Type{T}, _size::Size) where {T}
-    if _size == size(lattice)
-        Lattice{T}(undef)
-    else
-        return similar(Array(lattice), T, _size)
-    end
-end
+    similar(Lattice{T}, 3, 3)
 # Override https://github.com/JuliaLang/julia/blob/v1.10.0-beta2/base/abstractarray.jl#L839
-function Base.similar(lattice::Lattice, ::Type{T}, dims::Dims) where {T}
-    if dims == size(lattice)
-        Lattice{T}(undef)
+function Base.similar(op::Lattice, ::Type{T}, dims::Dims) where {T}
+    if dims == size(op)
+        return Lattice(similar(Matrix{T}, dims))
     else
-        return similar(Array(lattice), T, dims)
+        throw(ArgumentError("invalid dims `$dims` for `Lattice`!"))
     end
 end
-function Base.similar(::Type{<:Lattice}, ::Type{T}, s::Size) where {T}
-    if s == (3, 3)
-        Lattice{T}(undef)
+# Override https://github.com/JuliaLang/julia/blob/v1.10.0-beta1/base/abstractarray.jl#L874
+function Base.similar(::Type{Lattice{T}}, dims::Dims) where {T}
+    if dims == (3, 3)
+        return Lattice(similar(Matrix{T}, dims))
     else
-        return Array{T}(undef, Tuple(s))
-    end
-end
-function Base.similar(::Type{<:Lattice}, ::Type{T}, dim, dims...) where {T}
-    if (dim, dims...) == (3, 3)
-        Lattice{T}(undef)
-    else
-        return Array{T}(undef, dim, dims...)
+        throw(ArgumentError("invalid dims `$dims` for `Lattice`!"))
     end
 end
 
-# See https://github.com/JuliaArrays/StaticArrays.jl/blob/v1.6.2/src/linalg.jl#L7-L25
-@inline +(lattice::Lattice) = lattice
-@inline +(lattice₁::Lattice, lattice₂::Lattice) = lattice₁ .+ lattice₂
-@inline +(A::AbstractArray, lattice::Lattice) = A .+ lattice
-@inline +(lattice::Lattice, A::AbstractArray) = lattice .+ A
+Base.:*(::Lattice, ::Lattice) = error("undefined operation `*` for `Lattice`s!")
 
-@inline -(lattice::Lattice) = -1 .* lattice
-@inline -(lattice₁::Lattice, lattice₂::Lattice) = lattice₁ .- lattice₂
-@inline -(A::AbstractArray, lattice::Lattice) = A .- lattice
-@inline -(lattice::Lattice, A::AbstractArray) = lattice .- A
-
-@inline *(n::Number, lattice::Lattice) = n .* lattice
-@inline *(lattice::Lattice, n::Number) = n .* lattice
-
-@inline /(lattice::Lattice, n::Number) = lattice ./ n
+Base.:/(::Lattice, ::Lattice) = error("undefined operation `/` for `Lattice`s!")
