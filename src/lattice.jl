@@ -31,11 +31,8 @@ julia> Lattice([
 """
 mutable struct Lattice{T} <: AbstractLattice{T}
     data::MMatrix{3,3,T,9}
-    Lattice{T}(data::StaticMatrix{T}) where {T} = new(data)
-    Lattice(data::StaticMatrix) = new{eltype(data)}(MMatrix{3,3}(data))
 end
-# See https://github.com/JuliaArrays/StaticArraysCore.jl/blob/v1.4.2/src/StaticArraysCore.jl#L195-L198
-Lattice{T}(::UndefInitializer) where {T} = Lattice(MMatrix{3,3,T,9}(undef))
+Lattice(data::AbstractMatrix) = Lattice(MMatrix{3,3}(data))
 """
     Lattice(𝐚::AbstractVector, 𝐛::AbstractVector, 𝐜::AbstractVector)
 
