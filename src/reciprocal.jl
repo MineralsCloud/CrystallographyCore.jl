@@ -1,3 +1,5 @@
+using LinearAlgebra: I, det, cross
+
 export ReciprocalLattice
 
 struct ReciprocalLattice{T} <: AbstractLattice{T}
@@ -18,6 +20,26 @@ basisvectors(lattice::ReciprocalLattice) = Tuple(eachbasisvector(lattice))
 Iterate over the three basis vectors of a reciprocal lattice.
 """
 eachbasisvector(lattice::ReciprocalLattice) = eachcol(lattice)
+
+"""
+    reciprocal(lattice::Lattice)
+    reciprocal(lattice::ReciprocalLattice)
+
+Get the reciprocal of a `Lattice` or a `ReciprocalLattice`.
+"""
+function reciprocal(lattice::Lattice)
+    Ω = det(lattice.data)  # Cannot use `cellvolume`, it takes the absolute value!
+    𝐚, 𝐛, 𝐜 = basisvectors(lattice)
+    return inv(Ω) * ReciprocalLattice(hcat(cross(𝐛, 𝐜), cross(𝐜, 𝐚), cross(𝐚, 𝐛)))
+end
+function reciprocal(lattice::ReciprocalLattice)
+    Ω⁻¹ = det(lattice.data)  # Cannot use `cellvolume`, it takes the absolute value!
+    𝐚⁻¹, 𝐛⁻¹, 𝐜⁻¹ = eachbasisvector(lattice)
+    return inv(Ω⁻¹) * Lattice(hcat(cross(𝐛⁻¹, 𝐜⁻¹), cross(𝐜⁻¹, 𝐚⁻¹), cross(𝐚⁻¹, 𝐛⁻¹)))
+end
+
+isreciprocal(a::ReciprocalLattice, b::Lattice) = parent(a)' * parent(b) ≈ I
+isreciprocal(a::Lattice, b::ReciprocalLattice) = isreciprocal(b, a)
 
 # See https://github.com/JuliaLang/julia/blob/v1.10.0-beta1/stdlib/LinearAlgebra/src/uniformscaling.jl#L130-L131
 Base.one(::Type{ReciprocalLattice{T}}) where {T} =
