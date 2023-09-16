@@ -2,7 +2,7 @@ using LinearAlgebra: I, det, cross
 
 import Base: *, /
 
-export ReciprocalLattice
+export ReciprocalLattice, reciprocal, isreciprocal
 
 struct ReciprocalLattice{T} <: AbstractLattice{T}
     data::MMatrix{3,3,T,9}

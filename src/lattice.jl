@@ -1,5 +1,7 @@
 using StaticArrays: MMatrix, SDiagonal
 
+export Lattice, eachbasisvector, basisvectors
+
 """
     AbstractLattice{T} <: AbstractMatrix{T}
 

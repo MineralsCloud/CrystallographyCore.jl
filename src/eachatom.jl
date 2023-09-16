@@ -1,3 +1,5 @@
+export eachatom
+
 struct EachAtom{A,B}
     atoms::Vector{A}
     positions::Vector{B}
