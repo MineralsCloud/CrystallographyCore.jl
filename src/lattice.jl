@@ -1,4 +1,4 @@
-using StaticArrays: MMatrix
+using StaticArrays: MMatrix, SDiagonal
 
 """
     AbstractLattice{T} <: AbstractMatrix{T}
@@ -119,6 +119,16 @@ basisvectors(lattice::Lattice) = Tuple(eachcol(lattice))
 Iterate over the three basis vectors of a `lattice`.
 """
 eachbasisvector(lattice::Lattice) = eachcol(lattice)
+
+# See https://github.com/JuliaLang/julia/blob/v1.10.0-beta1/stdlib/LinearAlgebra/src/uniformscaling.jl#L130-L131
+Base.one(::Type{Lattice{T}}) where {T} =
+    Lattice(MMatrix{3,3}(SDiagonal(one(T), one(T), one(T))))
+Base.one(lattice::Lattice) = one(typeof(lattice))
+
+# See https://github.com/JuliaLang/julia/blob/v1.10.0-beta1/stdlib/LinearAlgebra/src/uniformscaling.jl#L132-L133
+Base.oneunit(::Type{Lattice{T}}) where {T} =
+    Lattice(MMatrix{3,3}(SDiagonal(oneunit(T), oneunit(T), oneunit(T))))
+Base.oneunit(lattice::Lattice) = oneunit(typeof(lattice))
 
 Base.parent(lattice::Lattice) = lattice.data
 
