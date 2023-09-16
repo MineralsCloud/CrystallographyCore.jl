@@ -19,6 +19,16 @@ Iterate over the three basis vectors of a reciprocal lattice.
 """
 eachbasisvector(lattice::ReciprocalLattice) = eachcol(lattice)
 
+# See https://github.com/JuliaLang/julia/blob/v1.10.0-beta1/stdlib/LinearAlgebra/src/uniformscaling.jl#L130-L131
+Base.one(::Type{ReciprocalLattice{T}}) where {T} =
+    ReciprocalLattice(MMatrix{3,3}(SDiagonal(one(T), one(T), one(T))))
+Base.one(lattice::ReciprocalLattice) = one(typeof(lattice))
+
+# See https://github.com/JuliaLang/julia/blob/v1.10.0-beta1/stdlib/LinearAlgebra/src/uniformscaling.jl#L132-L133
+Base.oneunit(::Type{ReciprocalLattice{T}}) where {T} =
+    ReciprocalLattice(MMatrix{3,3}(SDiagonal(oneunit(T), oneunit(T), oneunit(T))))
+Base.oneunit(lattice::ReciprocalLattice) = oneunit(typeof(lattice))
+
 Base.parent(lattice::ReciprocalLattice) = lattice.data
 
 Base.size(::ReciprocalLattice) = (3, 3)
