@@ -4,6 +4,17 @@ import Base: *, /
 
 export ReciprocalLattice, reciprocal, isreciprocal
 
+"""
+    ReciprocalLattice(data::AbstractMatrix)
+
+Construct a `ReciprocalLattice` from a matrix.
+
+!!! note
+    The basis vectors of the matrix are stored as columns.
+
+!!! warning
+    Avoid using this constructor directly. Use `reciprocal` instead.
+"""
 struct ReciprocalLattice{T} <: AbstractLattice{T}
     data::MMatrix{3,3,T,9}
 end
