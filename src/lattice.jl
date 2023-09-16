@@ -124,9 +124,13 @@ eachbasisvector(lattice::Lattice) = eachcol(lattice)
 
 Base.parent(lattice::Lattice) = lattice.data
 
+Base.size(::Lattice) = (3, 3)
+
 Base.getindex(lattice::Lattice, i::Int) = getindex(parent(lattice), i)
+Base.getindex(lattice::Lattice, I...) = getindex(parent(lattice), I...)
 
 Base.setindex!(lattice::Lattice, v, i::Int) = setindex!(parent(lattice), v, i)
+Base.setindex!(lattice::Lattice, X, I...) = setindex!(parent(lattice), X, I...)
 
 # Customizing broadcasting
 # See https://github.com/JuliaArrays/StaticArraysCore.jl/blob/v1.4.2/src/StaticArraysCore.jl#L397-L398
