@@ -1,4 +1,4 @@
-using StaticArrays: MMatrix, Size
+using StaticArrays: MMatrix
 
 """
     AbstractLattice{T} <: AbstractMatrix{T}
