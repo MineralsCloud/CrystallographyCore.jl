@@ -1,5 +1,7 @@
 using LinearAlgebra: I, det, cross
 
+import Base: *, /
+
 export ReciprocalLattice
 
 struct ReciprocalLattice{T} <: AbstractLattice{T}
@@ -91,8 +93,10 @@ function Base.similar(::Type{ReciprocalLattice{T}}, dims::Dims) where {T}
     end
 end
 
-Base.:*(::ReciprocalLattice, ::ReciprocalLattice) =
-    error("undefined operation `*` for `ReciprocalLattice`s!")
-
-Base.:/(::ReciprocalLattice, ::ReciprocalLattice) =
-    error("undefined operation `/` for `ReciprocalLattice`s!")
+for op in (:*, :/)
+    for S in (:Lattice, :ReciprocalLattice)
+        for T in (:Lattice, :ReciprocalLattice)
+            @eval $op(::$S, ::$T) = error("undefined operation!")
+        end
+    end
+end
