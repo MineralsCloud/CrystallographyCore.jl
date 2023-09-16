@@ -154,8 +154,8 @@ Base.BroadcastStyle(::Type{<:Lattice}) = LatticeStyle()
 Base.similar(::Broadcast.Broadcasted{LatticeStyle}, ::Type{T}) where {T} =
     similar(Lattice{T}, 3, 3)
 # Override https://github.com/JuliaLang/julia/blob/v1.10.0-beta2/base/abstractarray.jl#L839
-function Base.similar(op::Lattice, ::Type{T}, dims::Dims) where {T}
-    if dims == size(op)
+function Base.similar(lattice::Lattice, ::Type{T}, dims::Dims) where {T}
+    if dims == size(lattice)
         return Lattice(similar(Matrix{T}, dims))
     else
         throw(ArgumentError("invalid dims `$dims` for `Lattice`!"))
