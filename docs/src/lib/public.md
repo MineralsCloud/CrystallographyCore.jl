@@ -18,14 +18,23 @@ Pages = ["public.md"]
 ### Lattices
 
 ```@docs
-CrystallographyCore.Lattice
-CrystallographyCore.basisvectors
-CrystallographyCore.eachbasisvector
+Lattice
+basisvectors(::Lattice)
+eachbasisvector(::Lattice)
+```
+
+### Reciprocal lattices
+
+```@docs
+ReciprocalLattice
+basisvectors(::ReciprocalLattice)
+eachbasisvector(::ReciprocalLattice)
+reciprocal
 ```
 
 ### Cells
 
 ```@docs
-CrystallographyCore.Cell
-CrystallographyCore.eachatom
+Cell
+eachatom
 ```
