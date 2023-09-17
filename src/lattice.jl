@@ -142,7 +142,7 @@ Base.getindex(lattice::Lattice, I...) = getindex(parent(lattice), I...)
 Base.setindex!(lattice::Lattice, v, i::Int) = setindex!(parent(lattice), v, i)
 Base.setindex!(lattice::Lattice, X, I...) = setindex!(parent(lattice), X, I...)
 
-Base.IndexStyle(::Type{Lattice{T}}) where {T} = IndexLinear()
+Base.IndexStyle(::Type{<:Lattice}) = IndexLinear()
 
 # Customizing broadcasting
 # See https://github.com/JuliaArrays/StaticArraysCore.jl/blob/v1.4.2/src/StaticArraysCore.jl#L397-L398
