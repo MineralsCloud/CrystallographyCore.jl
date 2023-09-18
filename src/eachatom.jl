@@ -10,7 +10,7 @@ end
 
 Create a generator that iterates over the atoms in a `Cell`.
 """
-eachatom(cell::Cell) = EachAtom(cell)
+eachatom(cell::Cell) = EachAtom(cell.atoms, cell.positions)
 
 # Similar to https://github.com/JuliaCollections/IterTools.jl/blob/0ecaa88/src/IterTools.jl#L1028-L1032
 function Base.iterate(iter::EachAtom, state=1)
