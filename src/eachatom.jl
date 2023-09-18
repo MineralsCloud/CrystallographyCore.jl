@@ -4,7 +4,6 @@ struct EachAtom{A,B}
     atoms::Vector{A}
     positions::Vector{B}
 end
-EachAtom(cell::Cell) = EachAtom(cell.atoms, cell.positions)
 
 """
     eachatom(cell::Cell)
