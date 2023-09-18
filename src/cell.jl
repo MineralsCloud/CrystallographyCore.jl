@@ -24,11 +24,13 @@ function Cell(lattice, positions, atoms)
     if !(lattice isa Lattice)
         lattice = Lattice(lattice)
     end
-    if positions isa AbstractVector
-        P = eltype(Base.promote_typeof(positions...))
-        positions = collect(map(MVector{3,P}, positions))
-    else
-        throw(ArgumentError("`positions` must be a `Vector` of `Vector`s!"))
+    typeassert(positions, AbstractVector{<:AbstractVector})
+    P = eltype(Base.promote_typeof(positions...))
+    positions = collect(map(MVector{3,P}, positions))
+    for position in positions
+        if any(abs.(position) .> oneunit(eltype(position)))
+            throw(ArgumentError("atomic positions must be fractional!"))
+        end
     end
     L, T = eltype(lattice), eltype(atoms)
     return Cell{L,P,T}(lattice, positions, atoms)
