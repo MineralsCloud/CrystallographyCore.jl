@@ -32,15 +32,14 @@ function Cell(lattice, positions, atoms)
         lattice = Lattice(lattice)
     end
     typeassert(positions, AbstractVector{<:AbstractVector})
-    P = eltype(Base.promote_typeof(positions...))
-    positions = collect(map(MVector{3,P}, positions))
-    for position in positions
-        if any(abs.(position) .> oneunit(eltype(position)))
-            throw(ArgumentError("atomic positions must be fractional!"))
-        end
+    if length(positions) != length(atoms)
+        throw(DimensionMismatch("the lengths of atomic positions and atoms are different!"))
     end
+    N = length(positions)
+    P = promote_type(eltype.(positions)...)
+    positions = map(CrystalCoordinates{P}, positions)
     L, T = eltype(lattice), eltype(atoms)
-    return Cell{L,P,T}(lattice, positions, atoms)
+    return Cell{N,L,P,T}(lattice, positions, atoms)
 end
 
 natoms(cell::Cell) = length(cell.atoms)
