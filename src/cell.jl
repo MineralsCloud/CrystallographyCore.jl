@@ -1,7 +1,13 @@
-using StaticArrays: MVector
+using StaticArrays: SVector, FieldVector
 using StructEquality: @struct_hash_equal_isequal
 
 export Cell, natoms, atomtypes
+
+struct CrystalCoordinates{T} <: FieldVector{3,T}
+    x::T
+    y::T
+    z::T
+end
 
 abstract type AbstractCell end
 @struct_hash_equal_isequal struct Cell{L,P,T} <: AbstractCell
