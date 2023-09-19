@@ -1,8 +1,8 @@
 export eachatom
 
-struct EachAtom{A,B}
-    atoms::Vector{A}
-    positions::Vector{B}
+struct EachAtom{N,A,B}
+    atoms::SVector{N,A}
+    positions::SVector{N,B}
 end
 
 """
@@ -21,8 +21,8 @@ function Base.iterate(iter::EachAtom, state=1)
     end
 end
 
-Base.eltype(::EachAtom{A,B}) where {A,B} = Tuple{A,B}
+Base.eltype(::EachAtom{N,A,B}) where {N,A,B} = Tuple{A,B}
 
-Base.length(iter::EachAtom) = length(iter.atoms)
+Base.length(::EachAtom{N}) where {N} = N
 
 Base.IteratorSize(::Type{<:EachAtom}) = Base.HasLength()
