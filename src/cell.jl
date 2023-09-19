@@ -35,7 +35,7 @@ function Cell(lattice, positions, atoms)
         throw(DimensionMismatch("the lengths of atomic positions and atoms are different!"))
     end
     N = length(positions)
-    P = promote_type(eltype.(positions)...)
+    P = reduce(promote_type, eltype.(positions))
     positions = map(CrystalCoordinates{P}, positions)
     L, T = eltype(lattice), eltype(atoms)
     return Cell{N,L,P,T}(lattice, positions, atoms)
