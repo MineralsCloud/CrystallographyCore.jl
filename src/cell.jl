@@ -41,7 +41,7 @@ function Cell(lattice, positions, atoms)
     return Cell{N,L,P,T}(lattice, positions, atoms)
 end
 
-natoms(cell::Cell) = length(cell.atoms)
+natoms(::Cell{N}) where {N} = N
 
 atomtypes(cell::Cell) = unique(cell.atoms)
 
