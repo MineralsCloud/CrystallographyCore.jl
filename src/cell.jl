@@ -1,3 +1,4 @@
+using ComputedFieldTypes: @computed
 using StaticArrays: SVector, FieldVector
 using StructEquality: @struct_hash_equal_isequal
 
@@ -10,10 +11,10 @@ struct CrystalCoordinates{T} <: FieldVector{3,T}
 end
 
 abstract type AbstractCell end
-@struct_hash_equal_isequal struct Cell{L,P,T} <: AbstractCell
+@computed @struct_hash_equal_isequal struct Cell{N,L,P,T} <: AbstractCell
     lattice::Lattice{L}
-    positions::Vector{MVector{3,P}}
-    atoms::Vector{T}
+    positions::SVector{N,CrystalCoordinates{P}}
+    atoms::SVector{N,T}
 end
 """
     Cell(lattice, positions, atoms)
