@@ -3,16 +3,17 @@ using StructEquality: @struct_hash_equal_isequal
 
 export Cell, natoms, atomtypes
 
-struct CrystalCoordinates{T} <: FieldVector{3,T}
+struct ReducedCoordinates{T} <: FieldVector{3,T}
     x::T
     y::T
     z::T
 end
+const CrystalCoordinates = ReducedCoordinates
 
 abstract type AbstractCell end
 @struct_hash_equal_isequal struct Cell{N,L,P,T} <: AbstractCell
     lattice::Lattice{L}
-    positions::SVector{N,CrystalCoordinates{P}}
+    positions::SVector{N,ReducedCoordinates{P}}
     atoms::SVector{N,T}
 end
 """
@@ -36,7 +37,7 @@ function Cell(lattice, positions, atoms)
     end
     N = length(positions)
     P = reduce(promote_type, eltype.(positions))
-    positions = map(CrystalCoordinates{P}, positions)
+    positions = map(ReducedCoordinates{P}, positions)
     L, T = eltype(lattice), eltype(atoms)
     return Cell{N,L,P,T}(lattice, positions, atoms)
 end
