@@ -1,7 +1,7 @@
 using StaticArrays: SVector, FieldVector
 using StructEquality: @struct_hash_equal_isequal
 
-export Cell, natoms, atomtypes
+export ReducedCoordinates, CrystalCoordinates, Cell, natoms, atomtypes
 
 struct ReducedCoordinates{T} <: FieldVector{3,T}
     x::T
