@@ -1,7 +1,5 @@
 using LinearAlgebra: I, det, cross
 
-import Base: *, /
-
 export ReciprocalLattice, reciprocal, isreciprocal
 
 """
@@ -78,3 +76,12 @@ Base.getindex(lattice::ReciprocalLattice, i...) = getindex(parent(lattice), i...
 Base.firstindex(::ReciprocalLattice) = 1
 
 Base.lastindex(::ReciprocalLattice) = 9
+
+Base.:*(lattice::ReciprocalLattice, x::Number) = ReciprocalLattice(parent(lattice) * x)
+Base.:*(x::Number, lattice::ReciprocalLattice) = lattice * x
+
+Base.:/(lattice::ReciprocalLattice, x::Number) = ReciprocalLattice(parent(lattice) / x)
+
+Base.:+(lattice::ReciprocalLattice) = lattice
+
+Base.:-(lattice::ReciprocalLattice) = -one(eltype(lattice)) * lattice
