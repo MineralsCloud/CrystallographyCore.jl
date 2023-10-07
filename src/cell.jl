@@ -1,5 +1,4 @@
-using StaticArrays: SVector, FieldVector
-using StaticVectors: Values
+using StaticArrays: FieldVector
 using StructEquality: @struct_hash_equal_isequal
 
 export ReducedCoordinates, CrystalCoordinates, Cell, natoms, atomtypes
@@ -12,10 +11,10 @@ end
 const CrystalCoordinates = ReducedCoordinates
 
 abstract type AbstractCell end
-@struct_hash_equal_isequal struct Cell{N,L,P,T} <: AbstractCell
+@struct_hash_equal_isequal mutable struct Cell{L,P,T} <: AbstractCell
     lattice::Lattice{L}
-    positions::Values{N,ReducedCoordinates{P}}
-    atoms::Values{N,T}
+    positions::Vector{ReducedCoordinates{P}}
+    atoms::Vector{T}
 end
 """
     Cell(lattice, positions, atoms)
@@ -35,14 +34,13 @@ function Cell(lattice, positions, atoms)
     if length(positions) != length(atoms)
         throw(DimensionMismatch("the lengths of atomic positions and atoms are different!"))
     end
-    N = length(positions)
     P = reduce(promote_type, eltype.(positions))
     positions = map(ReducedCoordinates{P} ∘ collect, positions)
     L, T = eltype(lattice), eltype(atoms)
-    return Cell{N,L,P,T}(lattice, positions, atoms)
+    return Cell{L,P,T}(lattice, positions, atoms)
 end
 
-natoms(::Cell{N}) where {N} = N
+natoms(cell::Cell) = length(cell.atoms)
 
 atomtypes(cell::Cell) = unique(cell.atoms)
 
