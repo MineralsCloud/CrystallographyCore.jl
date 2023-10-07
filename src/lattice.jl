@@ -4,7 +4,7 @@ using StructEquality: @struct_hash_equal_isequal_isapprox
 export Lattice, basisvectors
 
 """
-    AbstractLattice{T} <: AbstractMatrix{T}
+    AbstractLattice{T}
 
 Represent the real lattices and the reciprocal lattices.
 """
