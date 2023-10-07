@@ -31,13 +31,12 @@ function Cell(lattice, positions, atoms)
     if !(lattice isa Lattice)
         lattice = Lattice(lattice)
     end
-    typeassert(positions, AbstractVector{<:AbstractVector})
     if length(positions) != length(atoms)
         throw(DimensionMismatch("the lengths of atomic positions and atoms are different!"))
     end
     N = length(positions)
     P = reduce(promote_type, eltype.(positions))
-    positions = map(ReducedCoordinates{P}, positions)
+    positions = map(ReducedCoordinates{P} ∘ collect, positions)
     L, T = eltype(lattice), eltype(atoms)
     return Cell{N,L,P,T}(lattice, positions, atoms)
 end
