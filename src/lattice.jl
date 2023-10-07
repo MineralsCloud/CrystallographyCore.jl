@@ -1,7 +1,7 @@
 using StaticArrays: MMatrix, SDiagonal
 using StructEquality: @struct_hash_equal_isequal_isapprox
 
-export Lattice, eachbasisvector, basisvectors
+export Lattice, basisvectors
 
 """
     AbstractLattice{T} <: AbstractMatrix{T}
@@ -114,14 +114,8 @@ end
 
 Get the three basis vectors from a lattice.
 """
-basisvectors(lattice::Lattice) = Tuple(eachcol(lattice))
-
-"""
-    eachbasisvector(lattice::Lattice)
-
-Iterate over the three basis vectors of a lattice.
-"""
-eachbasisvector(lattice::Lattice) = eachcol(lattice)
+basisvectors(lattice::Lattice) =
+    lattice[begin:(begin + 2)], lattice[(begin + 3):(begin + 5)], lattice[(begin + 6):end]
 
 # See https://github.com/JuliaLang/julia/blob/v1.10.0-beta1/stdlib/LinearAlgebra/src/uniformscaling.jl#L130-L131
 Base.one(::Type{Lattice{T}}) where {T} = Lattice(SDiagonal(one(T), one(T), one(T)))
