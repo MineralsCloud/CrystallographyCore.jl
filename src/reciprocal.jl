@@ -25,14 +25,8 @@ ReciprocalLattice(data::AbstractMatrix) = ReciprocalLattice(MMatrix{3,3}(data))
 
 Get the three basis vectors from a reciprocal lattice.
 """
-basisvectors(lattice::ReciprocalLattice) = Tuple(eachbasisvector(lattice))
-
-"""
-    eachbasisvector(lattice::ReciprocalLattice)
-
-Iterate over the three basis vectors of a reciprocal lattice.
-"""
-eachbasisvector(lattice::ReciprocalLattice) = eachcol(lattice)
+basisvectors(lattice::ReciprocalLattice) =
+    lattice[begin:(begin + 2)], lattice[(begin + 3):(begin + 5)], lattice[(begin + 6):end]
 
 """
     reciprocal(lattice::Lattice)
@@ -47,7 +41,7 @@ function reciprocal(lattice::Lattice)
 end
 function reciprocal(lattice::ReciprocalLattice)
     Ω⁻¹ = det(lattice.data)  # Cannot use `cellvolume`, it takes the absolute value!
-    𝐚⁻¹, 𝐛⁻¹, 𝐜⁻¹ = eachbasisvector(lattice)
+    𝐚⁻¹, 𝐛⁻¹, 𝐜⁻¹ = basisvectors(lattice)
     return inv(Ω⁻¹) * Lattice(hcat(cross(𝐛⁻¹, 𝐜⁻¹), cross(𝐜⁻¹, 𝐚⁻¹), cross(𝐚⁻¹, 𝐛⁻¹)))
 end
 
