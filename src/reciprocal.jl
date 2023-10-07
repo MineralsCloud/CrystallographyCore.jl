@@ -1,7 +1,5 @@
 using LinearAlgebra: I, det, cross
 
-import Base: *, /
-
 export ReciprocalLattice, reciprocal, isreciprocal
 
 """
@@ -15,7 +13,7 @@ Construct a `ReciprocalLattice` from a matrix.
 !!! warning
     Avoid using this constructor directly. Use `reciprocal` instead.
 """
-struct ReciprocalLattice{T} <: AbstractLattice{T}
+@struct_hash_equal_isequal_isapprox struct ReciprocalLattice{T} <: AbstractLattice{T}
     data::MMatrix{3,3,T,9}
 end
 ReciprocalLattice(data::AbstractMatrix) = ReciprocalLattice(MMatrix{3,3}(data))
@@ -25,14 +23,8 @@ ReciprocalLattice(data::AbstractMatrix) = ReciprocalLattice(MMatrix{3,3}(data))
 
 Get the three basis vectors from a reciprocal lattice.
 """
-basisvectors(lattice::ReciprocalLattice) = Tuple(eachbasisvector(lattice))
-
-"""
-    eachbasisvector(lattice::ReciprocalLattice)
-
-Iterate over the three basis vectors of a reciprocal lattice.
-"""
-eachbasisvector(lattice::ReciprocalLattice) = eachcol(lattice)
+basisvectors(lattice::ReciprocalLattice) =
+    lattice[begin:(begin + 2)], lattice[(begin + 3):(begin + 5)], lattice[(begin + 6):end]
 
 """
     reciprocal(lattice::Lattice)
@@ -47,7 +39,7 @@ function reciprocal(lattice::Lattice)
 end
 function reciprocal(lattice::ReciprocalLattice)
     Ω⁻¹ = det(lattice.data)  # Cannot use `cellvolume`, it takes the absolute value!
-    𝐚⁻¹, 𝐛⁻¹, 𝐜⁻¹ = eachbasisvector(lattice)
+    𝐚⁻¹, 𝐛⁻¹, 𝐜⁻¹ = basisvectors(lattice)
     return inv(Ω⁻¹) * Lattice(hcat(cross(𝐛⁻¹, 𝐜⁻¹), cross(𝐜⁻¹, 𝐚⁻¹), cross(𝐚⁻¹, 𝐛⁻¹)))
 end
 
@@ -64,50 +56,32 @@ Base.oneunit(::Type{ReciprocalLattice{T}}) where {T} =
     ReciprocalLattice(MMatrix{3,3}(SDiagonal(oneunit(T), oneunit(T), oneunit(T))))
 Base.oneunit(lattice::ReciprocalLattice) = oneunit(typeof(lattice))
 
-Base.parent(lattice::ReciprocalLattice) = lattice.data
+# Similar to https://github.com/JuliaCollections/IterTools.jl/blob/0ecaa88/src/IterTools.jl#L1028-L1032
+Base.iterate(iter::ReciprocalLattice, state=1) = iterate(parent(iter), state)
+
+Base.IteratorSize(::Type{<:ReciprocalLattice}) = Base.HasShape{2}()
+
+Base.eltype(::Type{ReciprocalLattice{T}}) where {T} = T
+
+Base.length(::ReciprocalLattice) = 9
 
 Base.size(::ReciprocalLattice) = (3, 3)
+# See https://github.com/rafaqz/DimensionalData.jl/blob/bd28d08/src/array/array.jl#L74
+Base.size(lattice::ReciprocalLattice, dim) = size(parent(lattice), dim)  # Here, `parent(A)` is necessary to avoid `StackOverflowError`.
 
-Base.getindex(lattice::ReciprocalLattice, i::Int) = getindex(parent(lattice), i)
-Base.getindex(lattice::ReciprocalLattice, I...) = getindex(parent(lattice), I...)
+Base.parent(lattice::ReciprocalLattice) = lattice.data
 
-Base.setindex!(lattice::ReciprocalLattice, v, i::Int) = setindex!(parent(lattice), v, i)
-Base.setindex!(lattice::ReciprocalLattice, X, I...) = setindex!(parent(lattice), X, I...)
+Base.getindex(lattice::ReciprocalLattice, i...) = getindex(parent(lattice), i...)
 
-Base.IndexStyle(::Type{<:ReciprocalLattice}) = IndexLinear()
+Base.firstindex(::ReciprocalLattice) = 1
 
-# Customizing broadcasting
-# See https://github.com/JuliaArrays/StaticArraysCore.jl/blob/v1.4.2/src/StaticArraysCore.jl#L397-L398
-# and https://github.com/JuliaLang/julia/blob/v1.10.0-beta1/stdlib/LinearAlgebra/src/structuredbroadcast.jl#L7-L14
-struct ReciprocalLatticeStyle <: Broadcast.AbstractArrayStyle{2} end
-ReciprocalLatticeStyle(::Val{2}) = ReciprocalLatticeStyle()
-ReciprocalLatticeStyle(::Val{N}) where {N} = Broadcast.DefaultArrayStyle{N}()
+Base.lastindex(::ReciprocalLattice) = 9
 
-Base.BroadcastStyle(::Type{<:ReciprocalLattice}) = ReciprocalLatticeStyle()
+Base.:*(lattice::ReciprocalLattice, x::Number) = ReciprocalLattice(parent(lattice) * x)
+Base.:*(x::Number, lattice::ReciprocalLattice) = lattice * x
 
-Base.similar(::Broadcast.Broadcasted{ReciprocalLatticeStyle}, ::Type{T}) where {T} =
-    similar(ReciprocalLattice{T}, 3, 3)
-# Override https://github.com/JuliaLang/julia/blob/v1.10.0-beta2/base/abstractarray.jl#L839
-function Base.similar(lattice::ReciprocalLattice, ::Type{T}, dims::Dims) where {T}
-    if dims == size(lattice)
-        return ReciprocalLattice(similar(Matrix{T}, dims))
-    else
-        throw(ArgumentError("invalid dims `$dims` for `Lattice`!"))
-    end
-end
-# Override https://github.com/JuliaLang/julia/blob/v1.10.0-beta1/base/abstractarray.jl#L874
-function Base.similar(::Type{ReciprocalLattice{T}}, dims::Dims) where {T}
-    if dims == (3, 3)
-        return ReciprocalLattice(similar(Matrix{T}, dims))
-    else
-        throw(ArgumentError("invalid dims `$dims` for `ReciprocalLattice`!"))
-    end
-end
+Base.:/(lattice::ReciprocalLattice, x::Number) = ReciprocalLattice(parent(lattice) / x)
 
-for op in (:*, :/)
-    for S in (:Lattice, :ReciprocalLattice)
-        for T in (:Lattice, :ReciprocalLattice)
-            @eval $op(::$S, ::$T) = error("undefined operation!")
-        end
-    end
-end
+Base.:+(lattice::ReciprocalLattice) = lattice
+
+Base.:-(lattice::ReciprocalLattice) = -one(eltype(lattice)) * lattice
