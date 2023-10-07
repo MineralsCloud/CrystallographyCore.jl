@@ -7,7 +7,7 @@ export Lattice, eachbasisvector, basisvectors
 
 Represent the real lattices and the reciprocal lattices.
 """
-abstract type AbstractLattice{T} <: AbstractMatrix{T} end
+abstract type AbstractLattice{T} end
 """
     Lattice(data::AbstractMatrix)
 
