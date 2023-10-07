@@ -3,7 +3,7 @@ function Base.show(io::IO, ::MIME"text/plain", lattice::Lattice)
     println(io)
     join(
         io,
-        ' ' * join(basisvector, "  ") * '\n' for basisvector in basisvectors(lattice.data)
+        ' ' * join(basisvector, "  ") * '\n' for basisvector in basisvectors(lattice)
     )
     return nothing
 end
@@ -11,7 +11,7 @@ function Base.show(io::IO, ::MIME"text/plain", cell::Cell)
     summary(io, cell)
     println(io)
     println(io, " lattice:")
-    for basisvector in basisvectors(cell.lattice)
+    for basisvector in basisvectors(Lattice(cell))
         println(io, "   ", join(basisvector, "  "))
     end
     num_atom = natoms(cell)
