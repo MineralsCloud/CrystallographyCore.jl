@@ -132,42 +132,31 @@ Base.oneunit(::Type{Lattice{T}}) where {T} =
     Lattice(SDiagonal(oneunit(T), oneunit(T), oneunit(T)))
 Base.oneunit(lattice::Lattice) = oneunit(typeof(lattice))
 
-Base.parent(lattice::Lattice) = lattice.data
+# Similar to https://github.com/JuliaCollections/IterTools.jl/blob/0ecaa88/src/IterTools.jl#L1028-L1032
+Base.iterate(iter::Lattice, state=1) = iterate(parent(iter), state)
+
+Base.IteratorSize(::Type{<:Lattice}) = Base.HasShape{2}()
+
+Base.eltype(::Type{Lattice{T}}) where {T} = T
+
+Base.length(::Lattice) = 9
 
 Base.size(::Lattice) = (3, 3)
+# See https://github.com/rafaqz/DimensionalData.jl/blob/bd28d08/src/array/array.jl#L74
+Base.size(lattice::Lattice, dim) = size(parent(lattice), dim)  # Here, `parent(A)` is necessary to avoid `StackOverflowError`.
 
-Base.getindex(lattice::Lattice, i::Int) = getindex(parent(lattice), i)
-Base.getindex(lattice::Lattice, I...) = getindex(parent(lattice), I...)
+Base.parent(lattice::Lattice) = lattice.data
 
-Base.setindex!(lattice::Lattice, v, i::Int) = setindex!(parent(lattice), v, i)
-Base.setindex!(lattice::Lattice, X, I...) = setindex!(parent(lattice), X, I...)
+Base.getindex(lattice::Lattice, i...) = getindex(parent(lattice), i...)
 
-Base.IndexStyle(::Type{<:Lattice}) = IndexLinear()
+Base.firstindex(::Lattice) = 1
 
-# Customizing broadcasting
-# See https://github.com/JuliaArrays/StaticArraysCore.jl/blob/v1.4.2/src/StaticArraysCore.jl#L397-L398
-# and https://github.com/JuliaLang/julia/blob/v1.10.0-beta1/stdlib/LinearAlgebra/src/structuredbroadcast.jl#L7-L14
-struct LatticeStyle <: Broadcast.AbstractArrayStyle{2} end
-LatticeStyle(::Val{2}) = LatticeStyle()
-LatticeStyle(::Val{N}) where {N} = Broadcast.DefaultArrayStyle{N}()
+Base.lastindex(::Lattice) = 9
 
-Base.BroadcastStyle(::Type{<:Lattice}) = LatticeStyle()
+Base.:*(lattice::Lattice, x::Number) = Lattice(parent(lattice) * x)
+Base.:*(x::Number, lattice::Lattice) = lattice * x
 
-Base.similar(::Broadcast.Broadcasted{LatticeStyle}, ::Type{T}) where {T} =
-    similar(Lattice{T}, 3, 3)
-# Override https://github.com/JuliaLang/julia/blob/v1.10.0-beta2/base/abstractarray.jl#L839
-function Base.similar(lattice::Lattice, ::Type{T}, dims::Dims) where {T}
-    if dims == size(lattice)
-        return Lattice(similar(Matrix{T}, dims))
-    else
-        throw(ArgumentError("invalid dims `$dims` for `Lattice`!"))
-    end
-end
-# Override https://github.com/JuliaLang/julia/blob/v1.10.0-beta1/base/abstractarray.jl#L874
-function Base.similar(::Type{Lattice{T}}, dims::Dims) where {T}
-    if dims == (3, 3)
-        return Lattice(similar(Matrix{T}, dims))
-    else
-        throw(ArgumentError("invalid dims `$dims` for `Lattice`!"))
-    end
-end
+Base.:/(lattice::Lattice, x::Number) = Lattice(parent(lattice) / x)
+
+Base.:+(lattice::Lattice) = lattice
+Base.:-(lattice::Lattice) = -one(eltype(lattice)) * lattice
