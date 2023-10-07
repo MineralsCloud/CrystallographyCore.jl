@@ -163,5 +163,3 @@ Base.:+(x::Number, lattice::Lattice) = lattice + x
 Base.:-(lattice::Lattice) = -one(eltype(lattice)) * lattice
 Base.:-(lattice::Lattice, x::Number) = Lattice(parent(lattice) .- x)
 Base.:-(x::Number, lattice::Lattice) = -lattice + x
-
-(::Type{T})(lattice::Lattice) where {T<:AbstractMatrix} = T(parent(lattice))
