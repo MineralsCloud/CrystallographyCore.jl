@@ -85,3 +85,5 @@ Base.:/(lattice::ReciprocalLattice, x::Number) = ReciprocalLattice(parent(lattic
 Base.:+(lattice::ReciprocalLattice) = lattice
 
 Base.:-(lattice::ReciprocalLattice) = -one(eltype(lattice)) * lattice
+
+(::Type{T})(lattice::ReciprocalLattice) where {T<:AbstractMatrix} = T(parent(lattice))
