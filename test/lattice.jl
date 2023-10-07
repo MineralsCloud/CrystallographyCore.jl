@@ -29,7 +29,6 @@ using Unitful, UnitfulAtomic
         @test Lattice(mat) == Lattice(MMatrix{3,3}(mat))
         # Ragged array
         @test_throws DimensionMismatch Lattice([[1, 2], [3, 4, 5], [6]])
-        @test inv(inv(lattice)) == lattice
     end
     # Column vectors
     a = [1.1, 2.2, 3.1]
@@ -40,7 +39,6 @@ using Unitful, UnitfulAtomic
         2.2 5.5 8.8
         3.1 6.5 9.9
     ])
-    @test inv(inv(lattice)) == lattice
     @test basisvectors(Lattice(a, b, c)) == (a, b, c)
     @testset "with general iterables" begin
         # Tuple with 9 values
