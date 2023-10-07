@@ -157,4 +157,9 @@ Base.:*(x::Number, lattice::Lattice) = lattice * x
 Base.:/(lattice::Lattice, x::Number) = Lattice(parent(lattice) / x)
 
 Base.:+(lattice::Lattice) = lattice
+Base.:+(lattice::Lattice, x::Number) = Lattice(parent(lattice) .+ x)
+Base.:+(x::Number, lattice::Lattice) = lattice + x
+
 Base.:-(lattice::Lattice) = -one(eltype(lattice)) * lattice
+Base.:-(lattice::Lattice, x::Number) = Lattice(parent(lattice) .- x)
+Base.:-(x::Number, lattice::Lattice) = -lattice + x
