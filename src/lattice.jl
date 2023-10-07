@@ -126,6 +126,10 @@ Base.oneunit(::Type{Lattice{T}}) where {T} =
     Lattice(SDiagonal(oneunit(T), oneunit(T), oneunit(T)))
 Base.oneunit(lattice::Lattice) = oneunit(typeof(lattice))
 
+# See https://github.com/JuliaLang/julia/blob/v1.10.0-beta1/stdlib/LinearAlgebra/src/uniformscaling.jl#L134-L135
+Base.zero(::Type{Lattice{T}}) where {T} = Lattice(zeros(T, 3, 3))
+Base.zero(lattice::Lattice) = zero(typeof(lattice))
+
 # Similar to https://github.com/JuliaCollections/IterTools.jl/blob/0ecaa88/src/IterTools.jl#L1028-L1032
 Base.iterate(iter::Lattice, state=1) = iterate(parent(iter), state)
 
