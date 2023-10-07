@@ -1,4 +1,5 @@
 using StaticArrays: SVector, FieldVector
+using StaticVectors: Values
 using StructEquality: @struct_hash_equal_isequal
 
 export ReducedCoordinates, CrystalCoordinates, Cell, natoms, atomtypes
@@ -13,8 +14,8 @@ const CrystalCoordinates = ReducedCoordinates
 abstract type AbstractCell end
 @struct_hash_equal_isequal struct Cell{N,L,P,T} <: AbstractCell
     lattice::Lattice{L}
-    positions::SVector{N,ReducedCoordinates{P}}
-    atoms::SVector{N,T}
+    positions::Values{N,ReducedCoordinates{P}}
+    atoms::Values{N,T}
 end
 """
     Cell(lattice, positions, atoms)
