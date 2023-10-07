@@ -1,18 +1,15 @@
 function Base.show(io::IO, ::MIME"text/plain", lattice::Lattice)
     summary(io, lattice)
     println(io)
-    join(
-        io,
-        ' ' * join(basisvector, "  ") * '\n' for basisvector in basisvectors(lattice)
-    )
+    join(io, ' ' * join(row, "  ") * '\n' for row in eachrow(parent(lattice)))
     return nothing
 end
 function Base.show(io::IO, ::MIME"text/plain", cell::Cell)
     summary(io, cell)
     println(io)
     println(io, " lattice:")
-    for basisvector in basisvectors(Lattice(cell))
-        println(io, "   ", join(basisvector, "  "))
+    for row in eachrow(parent(Lattice(cell)))
+        println(io, "   ", join(row, "  "))
     end
     num_atom = natoms(cell)
     println(io, " $num_atom atomic positions:")
