@@ -15,7 +15,7 @@ Construct a `ReciprocalLattice` from a matrix.
 !!! warning
     Avoid using this constructor directly. Use `reciprocal` instead.
 """
-struct ReciprocalLattice{T} <: AbstractLattice{T}
+@struct_hash_equal_isequal_isapprox struct ReciprocalLattice{T} <: AbstractLattice{T}
     data::MMatrix{3,3,T,9}
 end
 ReciprocalLattice(data::AbstractMatrix) = ReciprocalLattice(MMatrix{3,3}(data))
