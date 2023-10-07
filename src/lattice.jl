@@ -1,4 +1,5 @@
 using StaticArrays: MMatrix, SDiagonal
+using StructEquality: @struct_hash_equal_isequal_isapprox
 
 export Lattice, eachbasisvector, basisvectors
 
@@ -29,7 +30,7 @@ julia> Lattice([
  3.4  6.7  9.1
 ```
 """
-mutable struct Lattice{T} <: AbstractLattice{T}
+@struct_hash_equal_isequal_isapprox struct Lattice{T} <: AbstractLattice{T}
     data::MMatrix{3,3,T,9}
 end
 Lattice(data::AbstractMatrix) = Lattice(MMatrix{3,3}(data))
