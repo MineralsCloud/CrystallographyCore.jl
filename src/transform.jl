@@ -5,6 +5,6 @@ end
 Base.inv(lattice::AbstractLattice) = Inverted(lattice)
 Base.inv(inverted::Inverted) = inverted.lattice
 
-(inverted::Inverted)(reduced::AbstractVector) = parent(inverted.lattice) \ reduced
+(inverted::Inverted)(cartesian::AbstractVector) = parent(inverted.lattice) \ cartesian
 
 (lattice::AbstractLattice)(reduced::AbstractVector) = parent(lattice) * reduced
