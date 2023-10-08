@@ -1,5 +1,7 @@
-using StaticArrays: FieldVector
+using StaticArrays: FieldVector, Size
 using StructEquality: @struct_hash_equal_isequal
+
+import StaticArrays: similar_type
 
 export ReducedCoordinates, CrystalCoordinates, Cell, natoms, atomtypes
 
@@ -50,3 +52,7 @@ atomtypes(cell::Cell) = unique(cell.atoms)
 Get the lattice of a `Cell`.
 """
 Lattice(cell::Cell) = cell.lattice
+
+# See https://juliaarrays.github.io/StaticArrays.jl/dev/pages/api/#StaticArraysCore.FieldVector
+similar_type(::Type{<:ReducedCoordinates}, ::Type{T}, s::Size{(3,)}) where {T} =
+    ReducedCoordinates{T}
