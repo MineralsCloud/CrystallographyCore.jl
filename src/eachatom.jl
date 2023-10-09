@@ -21,7 +21,7 @@ function Base.iterate(iter::EachAtom, state=1)
     end
 end
 
-Base.eltype(::EachAtom{N,A,B}) where {N,A,B} = Tuple{A,B}
+Base.eltype(::Type{EachAtom{N,A,B}}) where {N,A,B} = Tuple{A,B}
 
 Base.length(::EachAtom{N}) where {N} = N
 
