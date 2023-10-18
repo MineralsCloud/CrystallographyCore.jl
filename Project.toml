@@ -9,10 +9,12 @@ StaticArrays = "90137ffa-7385-5640-81b9-e52037218182"
 StructEquality = "6ec83bb0-ed9f-11e9-3b4c-2b04cb4e219c"
 
 [weakdeps]
+AtomsBase = "a963bdd2-2df7-4f54-a1ee-49d51e6be12a"
 Unitful = "1986cc42-f94f-5a68-af5c-568840ba703d"
 UnitfulLinearAlgebra = "c14bd059-d406-4571-8f61-9bd20e53c30b"
 
 [extensions]
+AtomsBaseExt = "AtomsBase"
 UnitfulExt = "Unitful"
 UnitfulLinearAlgebraExt = ["Unitful", "UnitfulLinearAlgebra"]
 
@@ -22,9 +24,11 @@ StructEquality = "1, 2"
 julia = "1"
 
 [extras]
+AtomsBase = "a963bdd2-2df7-4f54-a1ee-49d51e6be12a"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 Unitful = "1986cc42-f94f-5a68-af5c-568840ba703d"
 UnitfulAtomic = "a7773ee8-282e-5fa2-be4e-bd808c38a91a"
+UnitfulLinearAlgebra = "c14bd059-d406-4571-8f61-9bd20e53c30b"
 
 [targets]
-test = ["Test", "Unitful", "UnitfulAtomic"]
+test = ["Test", "AtomsBase", "Unitful", "UnitfulAtomic", "UnitfulLinearAlgebra"]
