@@ -166,4 +166,4 @@ Base.:-(x::Number, lattice::Lattice) = -lattice + x
 
 Base.convert(::Type{Lattice{T}}, lattice::Lattice{T}) where {T} = lattice
 Base.convert(::Type{Lattice{T}}, lattice::Lattice{S}) where {S,T} =
-    Lattice(convert(Matrix{T}, parent(lattice)))
+    Lattice(convert(MMatrix{3,3,T,9}, parent(lattice)))
