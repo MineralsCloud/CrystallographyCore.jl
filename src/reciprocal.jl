@@ -89,4 +89,4 @@ Base.:-(lattice::ReciprocalLattice) = -one(eltype(lattice)) * lattice
 Base.convert(::Type{ReciprocalLattice{T}}, lattice::ReciprocalLattice{T}) where {T} =
     lattice
 Base.convert(::Type{ReciprocalLattice{T}}, lattice::ReciprocalLattice{S}) where {S,T} =
-    ReciprocalLattice(convert(Matrix{T}, parent(lattice)))
+    ReciprocalLattice(convert(MMatrix{3,3,T,9}, parent(lattice)))
