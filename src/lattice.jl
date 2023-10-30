@@ -167,3 +167,10 @@ Base.:-(x, lattice::Lattice) = -lattice + x
 Base.convert(::Type{Lattice{T}}, lattice::Lattice{T}) where {T} = lattice
 Base.convert(::Type{Lattice{T}}, lattice::Lattice{S}) where {S,T} =
     Lattice(convert(MMatrix{3,3,T,9}, parent(lattice)))
+
+# See https://github.com/JuliaLang/julia/blob/v1.10.0-beta3/base/refpointer.jl#L95-L96
+Base.ndims(::Type{<:Lattice}) = 2
+Base.ndims(::Lattice) = 2
+
+# See https://docs.julialang.org/en/v1/manual/interfaces/#man-interfaces-broadcasting
+Base.broadcastable(lattice::Lattice) = Ref(lattice)
