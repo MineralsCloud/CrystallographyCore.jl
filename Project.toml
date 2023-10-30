@@ -19,6 +19,7 @@ UnitfulExt = "Unitful"
 UnitfulLinearAlgebraExt = ["Unitful", "UnitfulLinearAlgebra"]
 
 [compat]
+LinearAlgebra = "1"
 StaticArrays = "1"
 StructEquality = "1, 2"
 UnitfulLinearAlgebra = "0.3.2"
