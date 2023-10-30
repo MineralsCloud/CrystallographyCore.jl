@@ -4,6 +4,12 @@ function Base.show(io::IO, ::MIME"text/plain", lattice::Lattice)
     join(io, ' ' * join(row, "  ") * '\n' for row in eachrow(parent(lattice)))
     return nothing
 end
+function Base.show(io::IO, ::MIME"text/plain", lattice::ReciprocalLattice)
+    summary(io, lattice)
+    println(io)
+    join(io, ' ' * join(row, "  ") * '\n' for row in eachrow(parent(lattice)))
+    return nothing
+end
 function Base.show(io::IO, ::MIME"text/plain", cell::Cell)
     summary(io, cell)
     println(io)
