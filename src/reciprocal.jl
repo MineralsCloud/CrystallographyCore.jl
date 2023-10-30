@@ -77,10 +77,12 @@ Base.firstindex(::ReciprocalLattice) = 1
 
 Base.lastindex(::ReciprocalLattice) = 9
 
-Base.:*(lattice::ReciprocalLattice, x::Number) = ReciprocalLattice(parent(lattice) * x)
-Base.:*(x::Number, lattice::ReciprocalLattice) = lattice * x
+# You need this to let the broadcasting work.
+Base.:*(lattice::ReciprocalLattice, x) = ReciprocalLattice(parent(lattice) * x)
+Base.:*(x, lattice::ReciprocalLattice) = lattice * x
 
-Base.:/(lattice::ReciprocalLattice, x::Number) = ReciprocalLattice(parent(lattice) / x)
+# You need this to let the broadcasting work.
+Base.:/(lattice::ReciprocalLattice, x) = ReciprocalLattice(parent(lattice) / x)
 
 Base.:+(lattice::ReciprocalLattice) = lattice
 
@@ -89,4 +91,11 @@ Base.:-(lattice::ReciprocalLattice) = -one(eltype(lattice)) * lattice
 Base.convert(::Type{ReciprocalLattice{T}}, lattice::ReciprocalLattice{T}) where {T} =
     lattice
 Base.convert(::Type{ReciprocalLattice{T}}, lattice::ReciprocalLattice{S}) where {S,T} =
-    ReciprocalLattice(convert(Matrix{T}, parent(lattice)))
+    ReciprocalLattice(convert(MMatrix{3,3,T,9}, parent(lattice)))
+
+# See https://github.com/JuliaLang/julia/blob/v1.10.0-beta3/base/refpointer.jl#L95-L96
+Base.ndims(::Type{<:ReciprocalLattice}) = 2
+Base.ndims(::ReciprocalLattice) = 2
+
+# See https://docs.julialang.org/en/v1/manual/interfaces/#man-interfaces-broadcasting
+Base.broadcastable(lattice::ReciprocalLattice) = Ref(lattice)
