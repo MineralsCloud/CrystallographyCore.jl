@@ -1,13 +1,14 @@
 using StaticArrays: MMatrix, SDiagonal
+using StructEquality: @struct_hash_equal_isequal_isapprox
 
-export Lattice, eachbasisvector, basisvectors
+export Lattice, basisvectors
 
 """
-    AbstractLattice{T} <: AbstractMatrix{T}
+    AbstractLattice{T}
 
 Represent the real lattices and the reciprocal lattices.
 """
-abstract type AbstractLattice{T} <: AbstractMatrix{T} end
+abstract type AbstractLattice{T} end
 """
     Lattice(data::AbstractMatrix)
 
@@ -23,13 +24,13 @@ julia> Lattice([
            2.3 5.6 8.9
            3.4 6.7 9.1
        ])
-3×3 Lattice{Float64}
+Lattice{Float64}
  1.2  4.5  7.8
  2.3  5.6  8.9
  3.4  6.7  9.1
 ```
 """
-mutable struct Lattice{T} <: AbstractLattice{T}
+@struct_hash_equal_isequal_isapprox struct Lattice{T} <: AbstractLattice{T}
     data::MMatrix{3,3,T,9}
 end
 Lattice(data::AbstractMatrix) = Lattice(MMatrix{3,3}(data))
@@ -43,7 +44,7 @@ Construct a `Lattice` from three basis vectors.
 julia> 𝐚, 𝐛, 𝐜 = [1.2, 2.3, 3.4], [4.5, 5.6, 6.7], [7.8, 8.9, 9.10];
 
 julia> Lattice(𝐚, 𝐛, 𝐜)
-3×3 Lattice{Float64}
+Lattice{Float64}
  1.2  4.5  7.8
  2.3  5.6  8.9
  3.4  6.7  9.1
@@ -58,25 +59,25 @@ Construct a `Lattice` from, e.g., a vector of three basis vectors.
 # Examples
 ```jldoctest
 julia> Lattice([[1.2, 2.3, 3.4], [4.5, 5.6, 6.7], [7.8, 8.9, 9.10]])
-3×3 Lattice{Float64}
+Lattice{Float64}
  1.2  4.5  7.8
  2.3  5.6  8.9
  3.4  6.7  9.1
 
 julia> Lattice(((1.1, 2.2, 3.1), (4.4, 5.5, 6.5), (7.3, 8.8, 9.9)))
-3×3 Lattice{Float64}
+Lattice{Float64}
  1.1  4.4  7.3
  2.2  5.5  8.8
  3.1  6.5  9.9
 
 julia> Lattice((1.1, 2.2, 3.1, 4.4, 5.5, 6.5, 7.3, 8.8, 9.9))
-3×3 Lattice{Float64}
+Lattice{Float64}
  1.1  4.4  7.3
  2.2  5.5  8.8
  3.1  6.5  9.9
 
 julia> Lattice(i * 1.1 for i in 1:9)
-3×3 Lattice{Float64}
+Lattice{Float64}
  1.1  4.4  7.700000000000001
  2.2  5.5  8.8
  3.3000000000000003  6.6000000000000005  9.9
@@ -88,7 +89,7 @@ julia> Lattice(
            [0u"cm", 180.0u"bohr", 0u"m"],
            [0u"bohr", 0u"nm", (3//1) * u"angstrom"],
        )
-3×3 Lattice{Quantity{Float64, 𝐋, Unitful.FreeUnits{(m,), 𝐋, nothing}}}
+Lattice{Quantity{Float64, 𝐋, Unitful.FreeUnits{(m,), 𝐋, nothing}}}
  4.0e-9 m  0.0 m  0.0 m
  0.0 m  9.525189796254e-9 m  0.0 m
  0.0 m  0.0 m  3.0e-10 m
@@ -113,61 +114,67 @@ end
 
 Get the three basis vectors from a lattice.
 """
-basisvectors(lattice::Lattice) = Tuple(eachcol(lattice))
-
-"""
-    eachbasisvector(lattice::Lattice)
-
-Iterate over the three basis vectors of a lattice.
-"""
-eachbasisvector(lattice::Lattice) = eachcol(lattice)
+basisvectors(lattice::Lattice) =
+    lattice[begin:(begin + 2)], lattice[(begin + 3):(begin + 5)], lattice[(begin + 6):end]
 
 # See https://github.com/JuliaLang/julia/blob/v1.10.0-beta1/stdlib/LinearAlgebra/src/uniformscaling.jl#L130-L131
-Base.one(::Type{Lattice{T}}) where {T} =
-    Lattice(MMatrix{3,3}(SDiagonal(one(T), one(T), one(T))))
+Base.one(::Type{Lattice{T}}) where {T} = Lattice(SDiagonal(one(T), one(T), one(T)))
 Base.one(lattice::Lattice) = one(typeof(lattice))
 
 # See https://github.com/JuliaLang/julia/blob/v1.10.0-beta1/stdlib/LinearAlgebra/src/uniformscaling.jl#L132-L133
 Base.oneunit(::Type{Lattice{T}}) where {T} =
-    Lattice(MMatrix{3,3}(SDiagonal(oneunit(T), oneunit(T), oneunit(T))))
+    Lattice(SDiagonal(oneunit(T), oneunit(T), oneunit(T)))
 Base.oneunit(lattice::Lattice) = oneunit(typeof(lattice))
+
+# See https://github.com/JuliaLang/julia/blob/v1.10.0-beta1/stdlib/LinearAlgebra/src/uniformscaling.jl#L134-L135
+Base.zero(::Type{Lattice{T}}) where {T} = Lattice(zeros(T, 3, 3))
+Base.zero(lattice::Lattice) = zero(typeof(lattice))
+
+# Similar to https://github.com/JuliaCollections/IterTools.jl/blob/0ecaa88/src/IterTools.jl#L1028-L1032
+Base.iterate(iter::Lattice, state=1) = iterate(parent(iter), state)
+
+Base.IteratorSize(::Type{<:Lattice}) = Base.HasShape{2}()
+
+Base.eltype(::Type{Lattice{T}}) where {T} = T
+
+Base.length(::Lattice) = 9
+
+Base.size(::Lattice) = (3, 3)
+# See https://github.com/rafaqz/DimensionalData.jl/blob/bd28d08/src/array/array.jl#L74
+Base.size(lattice::Lattice, dim) = size(parent(lattice), dim)  # Here, `parent(A)` is necessary to avoid `StackOverflowError`.
 
 Base.parent(lattice::Lattice) = lattice.data
 
-Base.size(::Lattice) = (3, 3)
+Base.getindex(lattice::Lattice, i...) = getindex(parent(lattice), i...)
 
-Base.getindex(lattice::Lattice, i::Int) = getindex(parent(lattice), i)
-Base.getindex(lattice::Lattice, I...) = getindex(parent(lattice), I...)
+Base.firstindex(::Lattice) = 1
 
-Base.setindex!(lattice::Lattice, v, i::Int) = setindex!(parent(lattice), v, i)
-Base.setindex!(lattice::Lattice, X, I...) = setindex!(parent(lattice), X, I...)
+Base.lastindex(::Lattice) = 9
 
-Base.IndexStyle(::Type{<:Lattice}) = IndexLinear()
+# You need this to let the broadcasting work.
+Base.:*(lattice::Lattice, x) = Lattice(parent(lattice) * x)
+Base.:*(x, lattice::Lattice) = lattice * x
 
-# Customizing broadcasting
-# See https://github.com/JuliaArrays/StaticArraysCore.jl/blob/v1.4.2/src/StaticArraysCore.jl#L397-L398
-# and https://github.com/JuliaLang/julia/blob/v1.10.0-beta1/stdlib/LinearAlgebra/src/structuredbroadcast.jl#L7-L14
-struct LatticeStyle <: Broadcast.AbstractArrayStyle{2} end
-LatticeStyle(::Val{2}) = LatticeStyle()
-LatticeStyle(::Val{N}) where {N} = Broadcast.DefaultArrayStyle{N}()
+# You need this to let the broadcasting work.
+Base.:/(lattice::Lattice, x) = Lattice(parent(lattice) / x)
 
-Base.BroadcastStyle(::Type{<:Lattice}) = LatticeStyle()
+Base.:+(lattice::Lattice) = lattice
+# You need this to let the broadcasting work.
+Base.:+(lattice::Lattice, x) = Lattice(parent(lattice) .+ x)
+Base.:+(x, lattice::Lattice) = lattice + x
 
-Base.similar(::Broadcast.Broadcasted{LatticeStyle}, ::Type{T}) where {T} =
-    similar(Lattice{T}, 3, 3)
-# Override https://github.com/JuliaLang/julia/blob/v1.10.0-beta2/base/abstractarray.jl#L839
-function Base.similar(lattice::Lattice, ::Type{T}, dims::Dims) where {T}
-    if dims == size(lattice)
-        return Lattice(similar(Matrix{T}, dims))
-    else
-        throw(ArgumentError("invalid dims `$dims` for `Lattice`!"))
-    end
-end
-# Override https://github.com/JuliaLang/julia/blob/v1.10.0-beta1/base/abstractarray.jl#L874
-function Base.similar(::Type{Lattice{T}}, dims::Dims) where {T}
-    if dims == (3, 3)
-        return Lattice(similar(Matrix{T}, dims))
-    else
-        throw(ArgumentError("invalid dims `$dims` for `Lattice`!"))
-    end
-end
+Base.:-(lattice::Lattice) = -one(eltype(lattice)) * lattice
+# You need this to let the broadcasting work.
+Base.:-(lattice::Lattice, x) = Lattice(parent(lattice) .- x)
+Base.:-(x, lattice::Lattice) = -lattice + x
+
+Base.convert(::Type{Lattice{T}}, lattice::Lattice{T}) where {T} = lattice
+Base.convert(::Type{Lattice{T}}, lattice::Lattice{S}) where {S,T} =
+    Lattice(convert(MMatrix{3,3,T,9}, parent(lattice)))
+
+# See https://github.com/JuliaLang/julia/blob/v1.10.0-beta3/base/refpointer.jl#L95-L96
+Base.ndims(::Type{<:Lattice}) = 2
+Base.ndims(::Lattice) = 2
+
+# See https://docs.julialang.org/en/v1/manual/interfaces/#man-interfaces-broadcasting
+Base.broadcastable(lattice::Lattice) = Ref(lattice)

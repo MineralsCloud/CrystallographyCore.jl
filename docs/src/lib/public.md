@@ -20,7 +20,6 @@ Pages = ["public.md"]
 ```@docs
 Lattice
 basisvectors(::Lattice)
-eachbasisvector(::Lattice)
 ```
 
 ### Reciprocal lattices
@@ -28,7 +27,6 @@ eachbasisvector(::Lattice)
 ```@docs
 ReciprocalLattice
 basisvectors(::ReciprocalLattice)
-eachbasisvector(::ReciprocalLattice)
 reciprocal
 ```
 
