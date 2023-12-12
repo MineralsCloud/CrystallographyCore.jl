@@ -9,6 +9,7 @@ using AtomsBase:
     element_symbol,
     periodic_system
 using CrystallographyCore: basisvectors, eachatom
+using UnitfulLinearAlgebra  # For converting `AbstractSystem` to `Cell`
 
 import AtomsBase: FlexibleSystem
 import CrystallographyCore: Lattice, Cell
