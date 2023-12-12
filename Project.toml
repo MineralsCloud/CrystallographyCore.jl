@@ -14,7 +14,7 @@ Unitful = "1986cc42-f94f-5a68-af5c-568840ba703d"
 UnitfulLinearAlgebra = "c14bd059-d406-4571-8f61-9bd20e53c30b"
 
 [extensions]
-AtomsBaseExt = "AtomsBase"
+AtomsBaseExt = ["AtomsBase", "UnitfulLinearAlgebra"]
 UnitfulExt = "Unitful"
 UnitfulLinearAlgebraExt = ["Unitful", "UnitfulLinearAlgebra"]
 
