@@ -113,3 +113,6 @@ Base.BroadcastStyle(
 # See https://github.com/JuliaLang/julia/blob/v1.10.0-rc2/base/broadcast.jl#L1114-L1119
 Base.copy(bc::Broadcast.Broadcasted{Broadcast.Style{ReciprocalLattice}}) =
     ReciprocalLattice(MMatrix{3,3}(x for x in bc))  # For uniary and binary functions
+
+Base.broadcasted(::typeof(/), ::Number, ::ReciprocalLattice) =
+    throw(ArgumentError("you cannot divide a number by a reciprocal lattice!"))
