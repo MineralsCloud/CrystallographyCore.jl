@@ -183,10 +183,7 @@ Base.broadcastable(lattice::Lattice) = lattice
 Base.BroadcastStyle(::Type{<:Lattice}) = Broadcast.Style{Lattice}()
 
 # See https://github.com/JuliaLang/julia/blob/v1.10.0-rc2/base/broadcast.jl#L135
-Base.BroadcastStyle(::Broadcast.AbstractArrayStyle{0}, ::Broadcast.Style{Lattice}) =
-    Broadcast.Style{Lattice}()
-Base.BroadcastStyle(::Broadcast.Style{Lattice}, ::Broadcast.AbstractArrayStyle{0}) =
-    Broadcast.Style{Lattice}()
+Base.BroadcastStyle(::Broadcast.AbstractArrayStyle{0}, b::Broadcast.Style{Lattice}) = b
 
 # See https://github.com/JuliaLang/julia/blob/v1.10.0-rc2/base/broadcast.jl#L1114-L1119
 Base.copy(bc::Broadcast.Broadcasted{Broadcast.Style{Lattice}}) = bc.f(bc.args...)
