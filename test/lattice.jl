@@ -94,3 +94,31 @@ using Unitful, UnitfulAtomic
         @test inv(inv(lattice)) == lattice
     end
 end
+
+@testset "Test broadcasting for lattices" begin
+    lattice = Lattice([1, 0, 0], [0, 1, 0], [0, 0, 1])
+    @test lattice .* 4 == 4 .* lattice == Lattice([4, 0, 0], [0, 4, 0], [0, 0, 4])
+    @test lattice .* 4.0 == 4.0 .* lattice == Lattice([4.0, 0, 0], [0, 4.0, 0], [0, 0, 4.0])
+    @test lattice .* 4//1 == 4//1 .* lattice == Lattice([4, 0, 0], [0, 4, 0], [0, 0, 4])
+    @test lattice ./ 4 == Lattice([1//4, 0, 0], [0, 1//4, 0], [0, 0, 1//4])
+    @test lattice .* u"nm" ==
+        u"nm" .* lattice ==
+        Lattice(
+            [1u"nm", 0u"nm", 0u"nm"], [0u"nm", 1u"nm", 0u"nm"], [0u"nm", 0u"nm", 1u"nm"]
+        )
+    @test lattice .* 1u"nm" ==
+        1u"nm" .* lattice ==
+        Lattice(
+            [1u"nm", 0u"nm", 0u"nm"], [0u"nm", 1u"nm", 0u"nm"], [0u"nm", 0u"nm", 1u"nm"]
+        )
+    @test_throws ArgumentError 4 / lattice
+    @test_throws ArgumentError 4.0 ./ lattice
+end
+
+@testset "Test broadcasting for reciprocal lattices" begin
+    a, b, c = 4, 3, 5
+    lattice = Lattice([a, -b, 0] / 2, [a, b, 0] / 2, [0, 0, c])
+    @test reciprocal(lattice .* 4) == reciprocal(lattice) ./ 4
+    @test_throws ArgumentError 4 / reciprocal(lattice)
+    @test_throws ArgumentError 4.0 ./ reciprocal(lattice)
+end

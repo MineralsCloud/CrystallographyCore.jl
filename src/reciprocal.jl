@@ -78,11 +78,13 @@ Base.firstindex(::ReciprocalLattice) = 1
 Base.lastindex(::ReciprocalLattice) = 9
 
 # You need this to let the broadcasting work.
-Base.:*(lattice::ReciprocalLattice, x) = ReciprocalLattice(parent(lattice) * x)
-Base.:*(x, lattice::ReciprocalLattice) = lattice * x
+Base.:*(lattice::ReciprocalLattice, x::Number) = ReciprocalLattice(parent(lattice) * x)
+Base.:*(x::Number, lattice::ReciprocalLattice) = lattice * x
 
 # You need this to let the broadcasting work.
-Base.:/(lattice::ReciprocalLattice, x) = ReciprocalLattice(parent(lattice) / x)
+Base.:/(lattice::ReciprocalLattice, x::Number) = ReciprocalLattice(parent(lattice) / x)
+Base.:/(::Number, ::ReciprocalLattice) =
+    throw(ArgumentError("you cannot divide a number by a reciprocal lattice!"))
 
 Base.:+(lattice::ReciprocalLattice) = lattice
 
@@ -97,5 +99,20 @@ Base.convert(::Type{ReciprocalLattice{T}}, lattice::ReciprocalLattice{S}) where 
 Base.ndims(::Type{<:ReciprocalLattice}) = 2
 Base.ndims(::ReciprocalLattice) = 2
 
-# See https://docs.julialang.org/en/v1/manual/interfaces/#man-interfaces-broadcasting
-Base.broadcastable(lattice::ReciprocalLattice) = Ref(lattice)
+# See https://github.com/JuliaLang/julia/blob/v1.10.0-rc2/base/broadcast.jl#L741
+Base.broadcastable(lattice::ReciprocalLattice) = lattice
+
+# See https://github.com/JuliaLang/julia/blob/v1.10.0-rc2/base/broadcast.jl#L49
+Base.BroadcastStyle(::Type{<:ReciprocalLattice}) = Broadcast.Style{ReciprocalLattice}()
+
+# See https://github.com/JuliaLang/julia/blob/v1.10.0-rc2/base/broadcast.jl#L135
+Base.BroadcastStyle(
+    ::Broadcast.AbstractArrayStyle{0}, b::Broadcast.Style{ReciprocalLattice}
+) = b
+
+# See https://github.com/JuliaLang/julia/blob/v1.10.0-rc2/base/broadcast.jl#L1114-L1119
+Base.copy(bc::Broadcast.Broadcasted{Broadcast.Style{ReciprocalLattice}}) =
+    ReciprocalLattice(MMatrix{3,3}(x for x in bc))  # For uniary and binary functions
+
+Base.broadcasted(::typeof(/), ::Number, ::ReciprocalLattice) =
+    throw(ArgumentError("you cannot divide a number by a reciprocal lattice!"))
