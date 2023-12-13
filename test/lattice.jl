@@ -100,6 +100,11 @@ end
     @test lattice .* 4 == 4 .* lattice == Lattice([4, 0, 0], [0, 4, 0], [0, 0, 4])
     @test lattice .* 4.0 == 4.0 .* lattice == Lattice([4.0, 0, 0], [0, 4.0, 0], [0, 0, 4.0])
     @test lattice .* 4//1 == 4//1 .* lattice == Lattice([4, 0, 0], [0, 4, 0], [0, 0, 4])
+    @test lattice .* u"nm" ==
+        u"nm" .* lattice ==
+        Lattice(
+            [1u"nm", 0u"nm", 0u"nm"], [0u"nm", 1u"nm", 0u"nm"], [0u"nm", 0u"nm", 1u"nm"]
+        )
     @test lattice .* 1u"nm" ==
         1u"nm" .* lattice ==
         Lattice(
