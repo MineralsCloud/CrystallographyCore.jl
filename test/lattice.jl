@@ -94,3 +94,15 @@ using Unitful, UnitfulAtomic
         @test inv(inv(lattice)) == lattice
     end
 end
+
+@testset "Test broadcasting" begin
+    lattice = Lattice([1, 0, 0], [0, 1, 0], [0, 0, 1])
+    @test lattice .* 4 == 4 .* lattice == Lattice([4, 0, 0], [0, 4, 0], [0, 0, 4])
+    @test lattice .* 4.0 == 4.0 .* lattice == Lattice([4.0, 0, 0], [0, 4.0, 0], [0, 0, 4.0])
+    @test lattice .* 4//1 == 4//1 .* lattice == Lattice([4, 0, 0], [0, 4, 0], [0, 0, 4])
+    @test lattice .* 1u"nm" ==
+        1u"nm" .* lattice ==
+        Lattice(
+            [1u"nm", 0u"nm", 0u"nm"], [0u"nm", 1u"nm", 0u"nm"], [0u"nm", 0u"nm", 1u"nm"]
+        )
+end
