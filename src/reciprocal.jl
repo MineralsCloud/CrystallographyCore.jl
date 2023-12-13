@@ -83,6 +83,8 @@ Base.:*(x::Number, lattice::ReciprocalLattice) = lattice * x
 
 # You need this to let the broadcasting work.
 Base.:/(lattice::ReciprocalLattice, x::Number) = ReciprocalLattice(parent(lattice) / x)
+Base.:/(::Number, ::ReciprocalLattice) =
+    throw(ArgumentError("you cannot divide a number by a reciprocal lattice!"))
 
 Base.:+(lattice::ReciprocalLattice) = lattice
 
