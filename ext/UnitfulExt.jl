@@ -37,4 +37,11 @@ uconvert(u::Units, lattice::ReciprocalLattice) =
 ustrip(lattice::Lattice) = Lattice(map(ustrip, parent(lattice)))
 ustrip(lattice::ReciprocalLattice) = ReciprocalLattice(map(ustrip, parent(lattice)))
 
+# You need this to let the broadcasting work.
+Base.:*(lattice::Lattice, unit::Units) = Lattice(parent(lattice) * unit)
+Base.:*(unit::Units, lattice::Lattice) = lattice * unit
+
+# You need this to let the broadcasting work.
+Base.:/(lattice::Lattice, unit::Units) = Lattice(parent(lattice) / unit)
+
 end
