@@ -157,6 +157,8 @@ Base.:*(x::Number, lattice::Lattice) = lattice * x
 
 # You need this to let the broadcasting work.
 Base.:/(lattice::Lattice, x::Number) = Lattice(parent(lattice) / x)
+Base.:/(::Number, ::Lattice) =
+    throw(ArgumentError("you cannot divide a number by a lattice!"))
 
 Base.:+(lattice::Lattice) = lattice
 # You need this to let the broadcasting work.
