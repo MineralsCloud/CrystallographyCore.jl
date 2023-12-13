@@ -78,11 +78,11 @@ Base.firstindex(::ReciprocalLattice) = 1
 Base.lastindex(::ReciprocalLattice) = 9
 
 # You need this to let the broadcasting work.
-Base.:*(lattice::ReciprocalLattice, x) = ReciprocalLattice(parent(lattice) * x)
-Base.:*(x, lattice::ReciprocalLattice) = lattice * x
+Base.:*(lattice::ReciprocalLattice, x::Number) = ReciprocalLattice(parent(lattice) * x)
+Base.:*(x::Number, lattice::ReciprocalLattice) = lattice * x
 
 # You need this to let the broadcasting work.
-Base.:/(lattice::ReciprocalLattice, x) = ReciprocalLattice(parent(lattice) / x)
+Base.:/(lattice::ReciprocalLattice, x::Number) = ReciprocalLattice(parent(lattice) / x)
 
 Base.:+(lattice::ReciprocalLattice) = lattice
 
