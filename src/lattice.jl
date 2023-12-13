@@ -189,3 +189,6 @@ Base.BroadcastStyle(::Broadcast.AbstractArrayStyle{0}, b::Broadcast.Style{Lattic
 
 # See https://github.com/JuliaLang/julia/blob/v1.10.0-rc2/base/broadcast.jl#L1114-L1119
 Base.copy(bc::Broadcast.Broadcasted{Broadcast.Style{Lattice}}) = Lattice(x for x in bc)  # For uniary and binary functions
+
+Base.broadcasted(::typeof(/), ::Number, ::Lattice) =
+    throw(ArgumentError("you cannot divide a number by a lattice!"))
