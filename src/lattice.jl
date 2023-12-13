@@ -176,5 +176,20 @@ Base.convert(::Type{Lattice{T}}, lattice::Lattice{S}) where {S,T} =
 Base.ndims(::Type{<:Lattice}) = 2
 Base.ndims(::Lattice) = 2
 
-# See https://docs.julialang.org/en/v1/manual/interfaces/#man-interfaces-broadcasting
-Base.broadcastable(lattice::Lattice) = Ref(lattice)
+# See https://github.com/JuliaLang/julia/blob/v1.10.0-rc2/base/broadcast.jl#L741
+Base.broadcastable(lattice::Lattice) = lattice
+
+# See https://github.com/JuliaLang/julia/blob/v1.10.0-rc2/base/broadcast.jl#L49
+Base.BroadcastStyle(::Type{<:Lattice}) = Broadcast.Style{Lattice}()
+
+# See https://github.com/JuliaLang/julia/blob/v1.10.0-rc2/base/broadcast.jl#L135
+Base.BroadcastStyle(::Broadcast.AbstractArrayStyle{0}, ::Broadcast.Style{Lattice}) =
+    Broadcast.Style{Lattice}()
+Base.BroadcastStyle(::Broadcast.Style{Lattice}, ::Broadcast.AbstractArrayStyle{0}) =
+    Broadcast.Style{Lattice}()
+
+# See https://github.com/JuliaLang/julia/blob/v1.10.0-rc2/base/broadcast.jl#L315
+Broadcast.instantiate(bc::Broadcast.Broadcasted{Broadcast.Style{Lattice}}) = bc
+
+# See https://github.com/JuliaLang/julia/blob/v1.10.0-rc2/base/broadcast.jl#L1114-L1119
+Base.copy(bc::Broadcast.Broadcasted{Broadcast.Style{Lattice}}) = bc.f(bc.args...)
