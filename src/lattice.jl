@@ -186,9 +186,5 @@ Base.BroadcastStyle(::Type{<:Lattice}) = Broadcast.Style{Lattice}()
 Base.BroadcastStyle(::Broadcast.AbstractArrayStyle{0}, b::Broadcast.Style{Lattice}) = b
 
 # See https://github.com/JuliaLang/julia/blob/v1.10.0-rc2/base/broadcast.jl#L1114-L1119
-function Base.copy(
-    bc::Broadcast.Broadcasted{Broadcast.Style{Lattice},A,F,Tuple{Lattice{Int64}}}
-) where {A,F}
-    return Lattice(bc.f.(x for x in bc))
-end  # For uniary functions
-Base.copy(bc::Broadcast.Broadcasted{Broadcast.Style{Lattice}}) = bc.f(bc.args...)  # For binary functions
+Base.copy(bc::Broadcast.Broadcasted{Broadcast.Style{Lattice}}) =
+    Lattice(bc.f.(x for x in bc))  # For uniary and binary functions
