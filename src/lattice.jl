@@ -152,21 +152,21 @@ Base.firstindex(::Lattice) = 1
 Base.lastindex(::Lattice) = 9
 
 # You need this to let the broadcasting work.
-Base.:*(lattice::Lattice, x) = Lattice(parent(lattice) * x)
-Base.:*(x, lattice::Lattice) = lattice * x
+Base.:*(lattice::Lattice, x::Number) = Lattice(parent(lattice) * x)
+Base.:*(x::Number, lattice::Lattice) = lattice * x
 
 # You need this to let the broadcasting work.
-Base.:/(lattice::Lattice, x) = Lattice(parent(lattice) / x)
+Base.:/(lattice::Lattice, x::Number) = Lattice(parent(lattice) / x)
 
 Base.:+(lattice::Lattice) = lattice
 # You need this to let the broadcasting work.
-Base.:+(lattice::Lattice, x) = Lattice(parent(lattice) .+ x)
-Base.:+(x, lattice::Lattice) = lattice + x
+Base.:+(lattice::Lattice, x::Number) = Lattice(parent(lattice) .+ x)
+Base.:+(x::Number, lattice::Lattice) = lattice + x
 
 Base.:-(lattice::Lattice) = -one(eltype(lattice)) * lattice
 # You need this to let the broadcasting work.
-Base.:-(lattice::Lattice, x) = Lattice(parent(lattice) .- x)
-Base.:-(x, lattice::Lattice) = -lattice + x
+Base.:-(lattice::Lattice, x::Number) = Lattice(parent(lattice) .- x)
+Base.:-(x::Number, lattice::Lattice) = -lattice + x
 
 Base.convert(::Type{Lattice{T}}, lattice::Lattice{T}) where {T} = lattice
 Base.convert(::Type{Lattice{T}}, lattice::Lattice{S}) where {S,T} =
