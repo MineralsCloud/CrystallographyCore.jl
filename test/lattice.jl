@@ -2,6 +2,11 @@ using CrystallographyCore: Lattice, basisvectors
 using StaticArrays: SMatrix
 using Unitful, UnitfulAtomic
 
+@testset "Test `isbits`" begin
+    @test isbitstype(Lattice{Int})
+    @test isbits(Lattice([1, 0, 0], [0, 1, 0], [0, 0, 1]))
+end
+
 @testset "Constructing `Lattice`s" begin
     @testset "with matrix" begin
         # General 3x3 matrix
