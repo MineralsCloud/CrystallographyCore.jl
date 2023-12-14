@@ -14,9 +14,9 @@ Construct a `ReciprocalLattice` from a matrix.
     Avoid using this constructor directly. Use `reciprocal` instead.
 """
 @struct_hash_equal_isequal_isapprox struct ReciprocalLattice{T} <: AbstractLattice{T}
-    data::MMatrix{3,3,T,9}
+    data::SMatrix{3,3,T,9}
 end
-ReciprocalLattice(data::AbstractMatrix) = ReciprocalLattice(MMatrix{3,3}(data))
+ReciprocalLattice(data::AbstractMatrix) = ReciprocalLattice(SMatrix{3,3}(data))
 
 """
     basisvectors(lattice::ReciprocalLattice)
@@ -48,12 +48,12 @@ isreciprocal(a::Lattice, b::ReciprocalLattice) = isreciprocal(b, a)
 
 # See https://github.com/JuliaLang/julia/blob/v1.10.0-beta1/stdlib/LinearAlgebra/src/uniformscaling.jl#L130-L131
 Base.one(::Type{ReciprocalLattice{T}}) where {T} =
-    ReciprocalLattice(MMatrix{3,3}(SDiagonal(one(T), one(T), one(T))))
+    ReciprocalLattice(SMatrix{3,3}(SDiagonal(one(T), one(T), one(T))))
 Base.one(lattice::ReciprocalLattice) = one(typeof(lattice))
 
 # See https://github.com/JuliaLang/julia/blob/v1.10.0-beta1/stdlib/LinearAlgebra/src/uniformscaling.jl#L132-L133
 Base.oneunit(::Type{ReciprocalLattice{T}}) where {T} =
-    ReciprocalLattice(MMatrix{3,3}(SDiagonal(oneunit(T), oneunit(T), oneunit(T))))
+    ReciprocalLattice(SMatrix{3,3}(SDiagonal(oneunit(T), oneunit(T), oneunit(T))))
 Base.oneunit(lattice::ReciprocalLattice) = oneunit(typeof(lattice))
 
 # Similar to https://github.com/JuliaCollections/IterTools.jl/blob/0ecaa88/src/IterTools.jl#L1028-L1032
@@ -93,7 +93,7 @@ Base.:-(lattice::ReciprocalLattice) = ReciprocalLattice(-parent(lattice))
 Base.convert(::Type{ReciprocalLattice{T}}, lattice::ReciprocalLattice{T}) where {T} =
     lattice
 Base.convert(::Type{ReciprocalLattice{T}}, lattice::ReciprocalLattice{S}) where {S,T} =
-    ReciprocalLattice(convert(MMatrix{3,3,T,9}, parent(lattice)))
+    ReciprocalLattice(convert(SMatrix{3,3,T,9}, parent(lattice)))
 
 # See https://github.com/JuliaLang/julia/blob/v1.10.0-beta3/base/refpointer.jl#L95-L96
 Base.ndims(::Type{<:ReciprocalLattice}) = 2
@@ -112,7 +112,7 @@ Base.BroadcastStyle(
 
 # See https://github.com/JuliaLang/julia/blob/v1.10.0-rc2/base/broadcast.jl#L1114-L1119
 Base.copy(bc::Broadcast.Broadcasted{Broadcast.Style{ReciprocalLattice}}) =
-    ReciprocalLattice(MMatrix{3,3}(x for x in bc))  # For uniary and binary functions
+    ReciprocalLattice(SMatrix{3,3}(x for x in bc))  # For uniary and binary functions
 
 Base.broadcasted(::typeof(/), ::Number, ::ReciprocalLattice) =
     throw(ArgumentError("you cannot divide a number by a reciprocal lattice!"))

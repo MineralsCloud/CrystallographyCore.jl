@@ -1,5 +1,5 @@
 using CrystallographyCore: Lattice, basisvectors
-using StaticArrays: MMatrix
+using StaticArrays: SMatrix
 using Unitful, UnitfulAtomic
 
 @testset "Constructing `Lattice`s" begin
@@ -10,7 +10,7 @@ using Unitful, UnitfulAtomic
             2.3 5.6 8.9
             3.4 6.7 9.1
         ]
-        @test Lattice(mat) == Lattice(MMatrix{3,3}(mat))
+        @test Lattice(mat) == Lattice(SMatrix{3,3}(mat))
         @test basisvectors(Lattice(mat)) ==
             ([1.2, 2.3, 3.4], [4.5, 5.6, 6.7], [7.8, 8.9, 9.1])
         @test all(basisvectors(Lattice(mat)) .== basisvectors(Lattice(mat)))
@@ -26,7 +26,7 @@ using Unitful, UnitfulAtomic
             2.3 5.6 8.9
             3.4 6.7 9.1
         ]
-        @test Lattice(mat) == Lattice(MMatrix{3,3}(mat))
+        @test Lattice(mat) == Lattice(SMatrix{3,3}(mat))
         # Ragged array
         @test_throws DimensionMismatch Lattice([[1, 2], [3, 4, 5], [6]])
     end

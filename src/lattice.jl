@@ -1,4 +1,4 @@
-using StaticArrays: MMatrix, SDiagonal
+using StaticArrays: SMatrix, SDiagonal
 using StructEquality: @struct_hash_equal_isequal_isapprox
 
 export Lattice, basisvectors
@@ -31,9 +31,9 @@ Lattice{Float64}
 ```
 """
 @struct_hash_equal_isequal_isapprox struct Lattice{T} <: AbstractLattice{T}
-    data::MMatrix{3,3,T,9}
+    data::SMatrix{3,3,T,9}
 end
-Lattice(data::AbstractMatrix) = Lattice(MMatrix{3,3}(data))
+Lattice(data::AbstractMatrix) = Lattice(SMatrix{3,3}(data))
 """
     Lattice(𝐚::AbstractVector, 𝐛::AbstractVector, 𝐜::AbstractVector)
 
@@ -95,13 +95,13 @@ Lattice{Quantity{Float64, 𝐋, Unitful.FreeUnits{(m,), 𝐋, nothing}}}
  0.0 m  0.0 m  3.0e-10 m
 ```
 """
-Lattice(data::NTuple{9}) = Lattice(MMatrix{3,3}(data))
+Lattice(data::NTuple{9}) = Lattice(SMatrix{3,3}(data))
 Lattice(data::NTuple{3,NTuple{3}}) = Lattice(mapreduce(collect, hcat, data))
 Lattice(data::AbstractVector{<:AbstractVector}) = Lattice(hcat(data[1], data[2], data[3]))  # This is faster
-Lattice(iter::Base.Generator) = Lattice(MMatrix{3,3}(iter))
+Lattice(iter::Base.Generator) = Lattice(SMatrix{3,3}(iter))
 function Lattice(data::Union{AbstractVector,Tuple})
     if length(data) == 9
-        return Lattice(MMatrix{3,3}(data))
+        return Lattice(SMatrix{3,3}(data))
     elseif length(data) == 3
         return Lattice(mapreduce(collect, hcat, data))
     else
@@ -172,7 +172,7 @@ Base.:-(x::Number, lattice::Lattice) = -lattice + x
 
 Base.convert(::Type{Lattice{T}}, lattice::Lattice{T}) where {T} = lattice
 Base.convert(::Type{Lattice{T}}, lattice::Lattice{S}) where {S,T} =
-    Lattice(convert(MMatrix{3,3,T,9}, parent(lattice)))
+    Lattice(convert(SMatrix{3,3,T,9}, parent(lattice)))
 
 # See https://github.com/JuliaLang/julia/blob/v1.10.0-beta3/base/refpointer.jl#L95-L96
 Base.ndims(::Type{<:Lattice}) = 2
