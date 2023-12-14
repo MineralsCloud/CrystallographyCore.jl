@@ -88,7 +88,7 @@ Base.:/(::Number, ::ReciprocalLattice) =
 
 Base.:+(lattice::ReciprocalLattice) = lattice
 
-Base.:-(lattice::ReciprocalLattice) = -one(eltype(lattice)) * lattice
+Base.:-(lattice::ReciprocalLattice) = ReciprocalLattice(-parent(lattice))
 
 Base.convert(::Type{ReciprocalLattice{T}}, lattice::ReciprocalLattice{T}) where {T} =
     lattice
