@@ -192,3 +192,14 @@ Base.copy(bc::Broadcast.Broadcasted{Broadcast.Style{Lattice}}) = Lattice(x for x
 
 Base.broadcasted(::typeof(/), ::Number, ::Lattice) =
     throw(ArgumentError("you cannot divide a number by a lattice!"))
+
+Base.permutedims(lattice::Lattice) = Lattice(permutedims(parent(lattice)))
+
+function Base.transpose(lattice::Lattice)
+    throw(
+        DomainError(
+            "transpose($lattice)",
+            "`transpose` is intended for linear algebra usage, use `permutedims` instead.",
+        ),
+    )
+end
