@@ -152,6 +152,9 @@ Base.firstindex(::Lattice) = 1
 
 Base.lastindex(::Lattice) = 9
 
+Base.IndexStyle(::Type{<:Lattice}) = Base.IndexCartesian()
+Base.IndexStyle(::Lattice) = Base.IndexCartesian()
+
 # You need this to let the broadcasting work.
 Base.:*(lattice::Lattice, x::Number) = Lattice(parent(lattice) * x)
 Base.:*(x::Number, lattice::Lattice) = lattice * x
