@@ -131,7 +131,8 @@ Base.zero(::Type{Lattice{T}}) where {T} = Lattice(zeros(T, 3, 3))
 Base.zero(lattice::Lattice) = zero(typeof(lattice))
 
 # Similar to https://github.com/JuliaCollections/IterTools.jl/blob/0ecaa88/src/IterTools.jl#L1028-L1032
-Base.iterate(iter::Lattice, state=1) = iterate(parent(iter), state)
+Base.iterate(iter::Lattice) = iterate(parent(iter))
+Base.iterate(iter::Lattice, state) = iterate(parent(iter), state)
 
 Base.IteratorSize(::Type{<:Lattice}) = Base.HasShape{2}()
 
