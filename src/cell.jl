@@ -1,4 +1,4 @@
-using StaticArrays: FieldVector, Size
+using StaticArrays: FieldVector, MVector, Size, SVector
 using StructEquality: @struct_hash_equal_isequal
 
 import StaticArrays: similar_type
@@ -56,3 +56,9 @@ Lattice(cell::Cell) = cell.lattice
 # See https://juliaarrays.github.io/StaticArrays.jl/dev/pages/api/#StaticArraysCore.FieldVector
 similar_type(::Type{<:ReducedCoordinates}, ::Type{T}, s::Size{(3,)}) where {T} =
     ReducedCoordinates{T}
+
+struct DynamicCell{C<:Cell} <: AbstractCell
+    cell::C
+    lattice_velocities::SVector{3,MVector{3,Float64}}
+    ion_velocities::Vector{MVector{3,Float64}}
+end
