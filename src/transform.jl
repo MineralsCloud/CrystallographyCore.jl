@@ -1,3 +1,5 @@
+using StaticArrays: MMatrix
+
 struct Inverted{T<:AbstractLattice}
     lattice::T
 end
@@ -8,8 +10,6 @@ Base.inv(inverted::Inverted) = inverted.lattice
 (inverted::Inverted)(cartesian::AbstractVector) = parent(inverted.lattice) \ cartesian
 
 (lattice::AbstractLattice)(reduced::AbstractVector) = parent(lattice) * reduced
-
-using StaticArrays: MMatrix
 
 export StandardizedFromPrimitive,
     PrimitiveFromStandardized, PrimitiveToStandardized, StandardizedToPrimitive
