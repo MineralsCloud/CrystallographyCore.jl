@@ -101,7 +101,7 @@ end
     @testset "Test creating `Lattice`s from 6 lattice constants" begin
         # From https://github.com/LaurentRDC/crystals/blob/7c544fe/crystals/tests/test_lattice.py#L96
         @test basisvectors(Lattice(2, 1, 5, 90, 90, 90; axis=:c)) ==
-            ([2, 0, 0], [0, 1, 0], [0, 0, 5])  # Orthorombic
+            ([2, 0, 0], [0, 1, 0], [0, 0, 5])  # Orthorhombic
         # From https://github.com/LaurentRDC/crystals/blob/7c544fe/crystals/tests/test_lattice.py#L104
         @test basisvectors(Lattice(1, 2, 3, 90, 120, 90; axis=:c)) ==
             ([0.8660254037844387, 0, -0.5], [0, 2, 0], [0, 0, 3])  # Monoclinic
