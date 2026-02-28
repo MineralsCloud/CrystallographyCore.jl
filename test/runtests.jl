@@ -6,4 +6,5 @@ using Test
     include("lattice.jl")
     include("eachatom.jl")
     include("AtomsBase.jl")
+    include("transform.jl")
 end
