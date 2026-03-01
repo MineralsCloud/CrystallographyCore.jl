@@ -10,11 +10,11 @@ using LinearAlgebra: norm
     @test inv(lattice)([1, 3 / 2, 1]) == [2, 3, 1]  # Reduced from Cartesian coordinates
     # Compared with "SeeK-path" example oC1 (SiTi)
     @testset "Base centered orthorhombic" begin
-        a, b, c = 3.67939899, 4.15357986, 3.8236792350
+        a, b, c = 3.67939899, 4.15357986, 3.823679235
         lattice = Lattice([a, -b, 0] / 2, [a, b, 0] / 2, [0, 0, c])
-        @test lattice([1 / 2, 1 / 2, 1 / 2]) == [1.8396994950, 0, 1.9118396175]  # Si
+        @test lattice([1 / 2, 1 / 2, 1 / 2]) == [1.839699495, 0, 1.9118396175]  # Si
         @test lattice([0, 0, 0]) == [0, 0, 0]  # Ti
-        @test inv(lattice)([1.8396994950, 0, 1.9118396175]) ≈ [1 / 2, 1 / 2, 1 / 2]
+        @test inv(lattice)([1.839699495, 0, 1.9118396175]) ≈ [1 / 2, 1 / 2, 1 / 2]
     end
 end
 
@@ -68,7 +68,7 @@ end
     # Compared with "SeeK-path" example oC1 (SiTi)
     # The results on http://lampx.tugraz.at/~hadley/ss1/bzones/orthorhombic_bc.php are wrong by a factor of 2.
     @testset "Base centered orthorhombic Brillouin zone" begin
-        a, b, c = 3.67939899, 4.15357986, 3.8236792350
+        a, b, c = 3.67939899, 4.15357986, 3.823679235
         recip_lattice = reciprocal(Lattice([a, -b, 0] / 2, [a, b, 0] / 2, [0, 0, c]))
         @test recip_lattice([-1 / 2, 1 / 2, 0]) ≈ [0, 1 / b, 0] ≈ [0, 1.5127156619, 0] / 2π  # Y'
         @test recip_lattice([0, 0, 1 / 2]) ≈ [0, 0, 1 / 2 / c] ≈ [0, 0, 0.8216151148] / 2π  # Z
@@ -77,10 +77,10 @@ end
             [0, 1.5127156619, 0.8216151148] / 2π  # T'
         @test recip_lattice([0, 1 / 2, 0]) ≈
             [1 / 2 / a, 1 / 2 / b, 0] ≈
-            [0.8538331021, 0.7563578310, 0] / 2π  # S
+            [0.8538331021, 0.756357831, 0] / 2π  # S
         @test recip_lattice([0, 1 / 2, 1 / 2]) ≈
             [1 / a, 1 / b, 1 / c] / 2 ≈
-            [0.8538331021, 0.7563578310, 0.8216151148] / 2π  # R
+            [0.8538331021, 0.756357831, 0.8216151148] / 2π  # R
         @test recip_lattice([-0.4461772527, 0.5538227473, 1 / 2]) ≈
             [0.1838225731, 1.5127156619, 0.8216151148] / 2π  # E0
         @test inv(recip_lattice)([0, 1 / b, 0]) ≈ [-1 / 2, 1 / 2, 0]
@@ -182,7 +182,7 @@ end
                 [
                     -2.739741805 2.739741805 2.739741805
                     2.739741805 -2.739741805 2.739741805
-                    2.592418910 2.592418910 -2.592418910
+                    2.59241891 2.59241891 -2.59241891
                 ] / alat .* u"angstrom"
             ),
         ),
