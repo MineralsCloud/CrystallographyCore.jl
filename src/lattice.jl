@@ -239,3 +239,5 @@ function Base.transpose(lattice::Lattice)
         ),
     )
 end
+
+Base.Matrix(lattice::Lattice) = Matrix(parent(lattice))
