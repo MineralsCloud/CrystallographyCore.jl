@@ -272,8 +272,8 @@ end
         0 0 1
         0 -1 0
     ]
-    @test left * lattice == Lattice(left * Matrix(lattice))
-    @test lattice * right == Lattice(Matrix(lattice) * right)
+    @test left * lattice == Lattice(left * parent(lattice))
+    @test lattice * right == Lattice(parent(lattice) * right)
     @test_throws DimensionMismatch ones(2, 2) * lattice
     @test_throws DimensionMismatch lattice * ones(2, 2)
     @test_throws DimensionMismatch ones(3, 2) * lattice
