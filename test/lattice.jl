@@ -176,6 +176,66 @@ end
     end
 end
 
+@testset "Test conversions of `Lattice` to `AbstractMatrix`" begin
+    # Concrete Lat types
+    lat_f64 = Lattice(rand(SMatrix{3,3,Float64}))
+    lat_int = Lattice(rand(SMatrix{3,3,Int}))
+    # Abstract Lat types
+    lat_real = Lattice(SMatrix{3,3,Real}(Real[1 0 0; 0 1 0; 0 0 1]))
+    lat_any = Lattice(SMatrix{3,3,Any}(Any[1 0 0; 0 1 0; 0 0 1]))
+    @testset "Concrete target, Concrete lattice" begin
+        @test convert(Matrix{Float64}, lat_f64) isa Matrix{Float64}
+        @test convert(SMatrix{3,3,Float64}, lat_f64) isa SMatrix{3,3,Float64}
+        @test convert(Matrix{Int}, lat_int) isa Matrix{Int}
+        @test convert(Matrix{Float64}, lat_int) isa Matrix{Float64}
+        @test convert(SMatrix{3,3,Float64}, lat_int) isa SMatrix{3,3,Float64}
+        @test_throws TypeError convert(Matrix{Int}, lat_f64)
+        @test_throws TypeError convert(SMatrix{3,3,Int}, lat_f64)
+    end
+    @testset "Abstract target, Concrete lattice" begin
+        @test convert(Matrix{Real}, lat_f64) isa Matrix{Float64}
+        @test convert(Matrix{Number}, lat_int) isa Matrix{Int}
+        @test convert(Matrix, lat_f64) isa Matrix{Float64}
+        @test convert(Matrix, lat_int) isa Matrix{Int}
+    end
+    @testset "Concrete target, Abstract lattice" begin
+        @test_throws TypeError convert(Matrix{Float64}, lat_real)
+        @test_throws TypeError convert(Matrix{Int}, lat_real)
+        @test_throws TypeError convert(Matrix{Float64}, lat_any)
+    end
+    @testset "Abstract target, Abstract lattice" begin
+        @test convert(Matrix{Real}, lat_real) isa Matrix{Real}
+        @test convert(Matrix{Any}, lat_any) isa Matrix{Any}
+        @test convert(Matrix{Number}, lat_real) isa Matrix{Real}
+        @test convert(Matrix{Any}, lat_real) isa Matrix{Real}
+        @test_throws TypeError convert(Matrix{Integer}, lat_real)
+        @test convert(Matrix, lat_real) isa Matrix{Real}
+        @test convert(Matrix, lat_any) isa Matrix{Any}
+    end
+    @testset "Additional Numeric Types (BitTypes and BigTypes)" begin
+        lat_f32 = Lattice(rand(SMatrix{3,3,Float32}))
+        lat_i16 = Lattice(ones(SMatrix{3,3,Int16}))
+        lat_bigint = Lattice(fill(BigInt(2), 3, 3))
+        lat_bigfloat = Lattice(fill(BigFloat(2.5), 3, 3))
+        @test convert(Matrix{Float32}, lat_f32) isa Matrix{Float32}
+        @test convert(Matrix{Int16}, lat_i16) isa Matrix{Int16}
+        @test convert(Matrix{BigInt}, lat_bigint) isa Matrix{BigInt}
+        @test convert(Matrix{BigFloat}, lat_bigfloat) isa Matrix{BigFloat}
+        # Promotion upwards
+        @test convert(Matrix{Float64}, lat_f32) isa Matrix{Float64}
+        @test convert(Matrix{Float32}, lat_i16) isa Matrix{Float32}
+        @test convert(Matrix{BigFloat}, lat_bigint) isa Matrix{BigFloat}
+        # Demotion downwards should throw
+        @test_throws TypeError convert(Matrix{Float32}, lat_bigfloat)
+        @test_throws TypeError convert(Matrix{Int16}, lat_bigint)
+        # Abstract Targets with Concrete Lattice Elements
+        @test convert(Matrix{Real}, lat_f32) isa Matrix{Float32}
+        @test convert(Matrix{Number}, lat_i16) isa Matrix{Int16}
+        @test convert(Matrix{Real}, lat_bigint) isa Matrix{BigInt}
+        @test convert(Matrix{AbstractFloat}, lat_bigfloat) isa Matrix{BigFloat}
+    end
+end
+
 @testset "Test broadcasting for lattices" begin
     lattice = Lattice([1, 0, 0], [0, 1, 0], [0, 0, 1])
     @test lattice .* 4 == 4 .* lattice == Lattice([4, 0, 0], [0, 4, 0], [0, 0, 4])
