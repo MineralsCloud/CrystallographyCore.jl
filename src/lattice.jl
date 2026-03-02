@@ -190,6 +190,22 @@ Base.IndexStyle(::Lattice) = Base.IndexCartesian()
 # You need this to let the broadcasting work.
 Base.:*(lattice::Lattice, x::Number) = Lattice(parent(lattice) * x)
 Base.:*(x::Number, lattice::Lattice) = lattice * x
+function Base.:*(R::AbstractMatrix, lattice::Lattice)
+    size(R) == (3, 3) || throw(
+        DimensionMismatch(
+            "matrix size $(size(R)) is invalid: only 3×3 matrices can multiply a lattice",
+        ),
+    )
+    return Lattice(R * parent(lattice))
+end
+function Base.:*(lattice::Lattice, P::AbstractMatrix)
+    size(P) == (3, 3) || throw(
+        DimensionMismatch(
+            "matrix size $(size(P)) is invalid: only 3×3 matrices can multiply a lattice",
+        ),
+    )
+    return Lattice(parent(lattice) * P)
+end
 
 # You need this to let the broadcasting work.
 Base.:/(lattice::Lattice, x::Number) = Lattice(parent(lattice) / x)
