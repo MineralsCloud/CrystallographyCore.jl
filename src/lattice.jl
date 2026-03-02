@@ -46,7 +46,11 @@ See [Wikipedia](https://en.wikipedia.org/w/index.php?title=Fractional_coordinate
 You can also choose `axis = :c`.
 """
 function Lattice(a, b, c, α, β, γ; axis=:a)
-    Ω = a * b * c * sqrt(sind(α)^2 - cosd(β)^2 - cosd(γ)^2 + 2 * cosd(α) * cosd(β) * cosd(γ))
+    Ω =
+        a *
+        b *
+        c *
+        sqrt(sind(α)^2 - cosd(β)^2 - cosd(γ)^2 + 2 * cosd(α) * cosd(β) * cosd(γ))
     if axis == :a  # See https://en.wikipedia.org/w/index.php?title=Fractional_coordinates&oldid=961675499#In_crystallography
         sinγ, cosγ, cosα, cosβ, 𝟎 = sind(γ), cosd(γ), cosd(α), cosd(β), zero(a)
         return Lattice(
@@ -190,6 +194,20 @@ Base.IndexStyle(::Lattice) = Base.IndexCartesian()
 # You need this to let the broadcasting work.
 Base.:*(lattice::Lattice, x::Number) = Lattice(parent(lattice) * x)
 Base.:*(x::Number, lattice::Lattice) = lattice * x
+"""
+    *(R::AbstractMatrix, lattice::Lattice)
+
+Left-multiply a lattice by a matrix and return a `Lattice`.
+
+If the lattice matrix is ``\\mathrm{A} = [\\mathbf{a}\\ \\mathbf{b}\\ \\mathbf{c}]``
+(basis vectors as columns), this computes ``\\mathrm{R}\\mathrm{A}``.
+This corresponds to an active (reverse/alibi) transformation, such as
+a rigid Cartesian rotation applied to the crystal basis vectors.
+
+Only ``3×3`` matrices are supported.
+
+See also "[Left and right matrix actions on a lattice](@ref lattice_matrix_actions)".
+"""
 function Base.:*(R::AbstractMatrix, lattice::Lattice)
     size(R) == (3, 3) || throw(
         DimensionMismatch(
@@ -198,6 +216,19 @@ function Base.:*(R::AbstractMatrix, lattice::Lattice)
     )
     return Lattice(R * parent(lattice))
 end
+"""
+    *(lattice::Lattice, P::AbstractMatrix)
+
+Right-multiply a lattice by a matrix and return a `Lattice`.
+
+If the lattice matrix is ``\\mathrm{A} = [\\mathbf{a}\\ \\mathbf{b}\\ \\mathbf{c}]``
+(basis vectors as columns), this computes ``\\mathrm{A}\\mathrm{P}``.
+This corresponds to a passive (forward/alias) change of basis.
+
+Only ``3×3`` matrices are supported.
+
+See also "[Left and right matrix actions on a lattice](@ref lattice_matrix_actions)".
+"""
 function Base.:*(lattice::Lattice, P::AbstractMatrix)
     size(P) == (3, 3) || throw(
         DimensionMismatch(
