@@ -20,6 +20,8 @@ Pages = ["public.md"]
 ```@docs
 Lattice
 basisvectors(::Lattice)
+Base.:*(::AbstractMatrix, ::Lattice)
+Base.:*(::Lattice, ::AbstractMatrix)
 ```
 
 ### Reciprocal lattices

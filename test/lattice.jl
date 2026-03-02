@@ -196,6 +196,30 @@ end
     @test_throws ArgumentError 4.0 ./ lattice
 end
 
+@testset "Test lattice and matrix multiplication" begin
+    lattice = Lattice([
+        1 4 7
+        2 5 8
+        3 6 9
+    ])
+    left = [
+        0 1 0
+        -1 0 0
+        0 0 1
+    ]
+    right = [
+        1 0 0
+        0 0 1
+        0 -1 0
+    ]
+    @test left * lattice == Lattice(left * Matrix(lattice))
+    @test lattice * right == Lattice(Matrix(lattice) * right)
+    @test_throws DimensionMismatch ones(2, 2) * lattice
+    @test_throws DimensionMismatch lattice * ones(2, 2)
+    @test_throws DimensionMismatch ones(3, 2) * lattice
+    @test_throws DimensionMismatch lattice * ones(2, 3)
+end
+
 @testset "Test broadcasting for reciprocal lattices" begin
     a, b, c = 4, 3, 5
     lattice = Lattice([a, -b, 0] / 2, [a, b, 0] / 2, [0, 0, c])

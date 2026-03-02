@@ -45,6 +45,31 @@ Therefore, a lattice is represented as
     a_z & b_z & c_z
 \end{bmatrix}.
 ```
+
+## [Left and right matrix actions on a lattice](@id lattice_matrix_actions)
+
+With the convention above, the two operator overloads
+`Base.:*(::AbstractMatrix, ::Lattice)` and
+`Base.:*(::Lattice, ::AbstractMatrix)` represent different transformations:
+
+- Left action (`R * lattice`): ``\bar{\mathrm{A}} = \mathrm{R}\mathrm{A}``.
+  This is an active (reverse/alibi) transformation, e.g. a rigid Cartesian
+  rotation that rotates the crystal basis vectors themselves.
+- Right action (`lattice * P`): ``\mathrm{A}' = \mathrm{A}\mathrm{P}``.
+  This is a passive (forward/alias) transformation, i.e. a change of basis.
+
+In both cases, only ``3\times 3`` matrices are valid, because
+`Lattice` is explicitly a 3D object.
+Supplying any other matrix shape throws `DimensionMismatch`.
+
+These actions can be composed:
+
+```math
+\bar{\mathrm{A}}' = \mathrm{R}\,\mathrm{A}\,\mathrm{P}.
+```
+
+In general, left and right actions have different meanings and do not commute.
+
 ## [Transformation to the primitive cell](@id primitive)
 
 In the standardized unit cells, there are five different centring
