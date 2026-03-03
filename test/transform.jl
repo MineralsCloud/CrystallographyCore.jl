@@ -1118,3 +1118,90 @@ end
         ),
     ) < 5e-6u"bohr^-1"
 end
+
+@testset "Test inverse lattice multiplication" begin
+    @testset "Multiply inverted `Lattice` by another `Lattice`" begin
+        lat1 = Lattice([
+            1.0 0.0 0.0
+            0.0 1.0 0.0
+            0.0 0.0 1.0
+        ])
+        lat2 = Lattice([
+            2.0 0.0 0.0
+            0.0 2.0 0.0
+            0.0 0.0 2.0
+        ])
+        @test inv(lat1) * lat2 ≈ [
+            2.0 0.0 0.0
+            0.0 2.0 0.0
+            0.0 0.0 2.0
+        ]
+        @test lat2 * inv(lat1) ≈ [
+            2.0 0.0 0.0
+            0.0 2.0 0.0
+            0.0 0.0 2.0
+        ]
+        lat3 = Lattice([
+            2 0 0
+            0 2 0
+            0 0 2
+        ])
+        @test inv(lat1) * lat3 ≈ [
+            2.0 0.0 0.0
+            0.0 2.0 0.0
+            0.0 0.0 2.0
+        ]
+        @test lat3 * inv(lat1) ≈ [
+            2.0 0.0 0.0
+            0.0 2.0 0.0
+            0.0 0.0 2.0
+        ]
+    end
+    @testset "Multiply inverted `ReciprocalLattice` by another `ReciprocalLattice`" begin
+        rlat1 = ReciprocalLattice([
+            1.0 0.0 0.0
+            0.0 1.0 0.0
+            0.0 0.0 1.0
+        ])
+        rlat2 = ReciprocalLattice([
+            2.0 0.0 0.0
+            0.0 2.0 0.0
+            0.0 0.0 2.0
+        ])
+        @test inv(rlat1) * rlat2 ≈ [
+            2.0 0.0 0.0
+            0.0 2.0 0.0
+            0.0 0.0 2.0
+        ]
+        @test rlat2 * inv(rlat1) ≈ [
+            2.0 0.0 0.0
+            0.0 2.0 0.0
+            0.0 0.0 2.0
+        ]
+        rlat3 = ReciprocalLattice([
+            2 0 0
+            0 2 0
+            0 0 2
+        ])
+        @test inv(rlat1) * rlat3 ≈ [
+            2.0 0.0 0.0
+            0.0 2.0 0.0
+            0.0 0.0 2.0
+        ]
+        @test rlat3 * inv(rlat1) ≈ [
+            2.0 0.0 0.0
+            0.0 2.0 0.0
+            0.0 0.0 2.0
+        ]
+    end
+    @testset "Test exception for mismatched wrapper types" begin
+        lat1 = Lattice([
+            1.0 0.0 0.0
+            0.0 1.0 0.0
+            0.0 0.0 1.0
+        ])
+        rlat1 = reciprocal(lat1)
+        @test_throws ArgumentError inv(lat1) * rlat1
+        @test_throws ArgumentError rlat1 * inv(lat1)
+    end
+end
