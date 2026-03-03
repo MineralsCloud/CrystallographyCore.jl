@@ -1,27 +1,10 @@
 # CrystallographyCore
 
-|                                 **Documentation**                                  |                                                                                                 **Build Status**                                                                                                 |                                        **Others**                                         |
-| :--------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------: |
-| [![Stable][docs-stable-img]][docs-stable-url] [![Dev][docs-dev-img]][docs-dev-url] | [![Build Status][gha-img]][gha-url] [![Build Status][appveyor-img]][appveyor-url] [![Build Status][cirrus-img]][cirrus-url] [![pipeline status][gitlab-img]][gitlab-url] [![Coverage][codecov-img]][codecov-url] | [![GitHub license][license-img]][license-url] [![Code Style: Blue][style-img]][style-url] |
-
-[docs-stable-img]: https://img.shields.io/badge/docs-stable-blue.svg
-[docs-stable-url]: https://MineralsCloud.github.io/CrystallographyCore.jl/stable
-[docs-dev-img]: https://img.shields.io/badge/docs-dev-blue.svg
-[docs-dev-url]: https://MineralsCloud.github.io/CrystallographyCore.jl/dev
-[gha-img]: https://github.com/MineralsCloud/CrystallographyCore.jl/workflows/CI/badge.svg
-[gha-url]: https://github.com/MineralsCloud/CrystallographyCore.jl/actions
-[appveyor-img]: https://ci.appveyor.com/api/projects/status/github/MineralsCloud/CrystallographyCore.jl?svg=true
-[appveyor-url]: https://ci.appveyor.com/project/singularitti/CrystallographyCore-jl
-[cirrus-img]: https://api.cirrus-ci.com/github/MineralsCloud/CrystallographyCore.jl.svg
-[cirrus-url]: https://cirrus-ci.com/github/MineralsCloud/CrystallographyCore.jl
-[gitlab-img]: https://gitlab.com/singularitti/CrystallographyCore.jl/badges/main/pipeline.svg
-[gitlab-url]: https://gitlab.com/singularitti/CrystallographyCore.jl/-/pipelines
-[codecov-img]: https://codecov.io/gh/MineralsCloud/CrystallographyCore.jl/branch/main/graph/badge.svg
-[codecov-url]: https://codecov.io/gh/MineralsCloud/CrystallographyCore.jl
-[license-img]: https://img.shields.io/github/license/MineralsCloud/CrystallographyCore.jl
-[license-url]: https://github.com/MineralsCloud/CrystallographyCore.jl/blob/main/LICENSE
-[style-img]: https://img.shields.io/badge/code%20style-blue-4495d1.svg
-[style-url]: https://github.com/invenia/BlueStyle
+| **Documentation** | [![Stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://MineralsCloud.github.io/CrystallographyCore.jl/stable/) [![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://MineralsCloud.github.io/CrystallographyCore.jl/dev/)                                                                                                                                                                                                                                                                                                 |
+| :---------------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Build Status**  | [![Build Status](https://github.com/MineralsCloud/CrystallographyCore.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/MineralsCloud/CrystallographyCore.jl/actions/workflows/CI.yml?query=branch%3Amain) [![Build Status](https://ci.appveyor.com/api/projects/status/github/MineralsCloud/CrystallographyCore.jl?svg=true)](https://ci.appveyor.com/project/MineralsCloud/CrystallographyCore-jl)[![Build Status](https://api.cirrus-ci.com/github/MineralsCloud/CrystallographyCore.jl.svg)](https://cirrus-ci.com/github/MineralsCloud/CrystallographyCore.jl) |
+|   **Coverage**    | [![Coverage](https://github.com/MineralsCloud/CrystallographyCore.jl/badges/main/coverage.svg)](https://github.com/MineralsCloud/CrystallographyCore.jl/commits/main) [![Coverage](https://codecov.io/gh/MineralsCloud/CrystallographyCore.jl/branch/main/graph/badge.svg)](https://codecov.io/gh/MineralsCloud/CrystallographyCore.jl)                                                                                                                                                                                                                |
+|    **Others**     | [![Code Style: Blue](https://img.shields.io/badge/code%20style-blue-4495d1.svg)](https://github.com/invenia/BlueStyle) [![License](https://img.shields.io/github/license/MineralsCloud/CrystallographyCore.jl)](https://github.com/MineralsCloud/CrystallographyCore.jl/blob/main/LICENSE)                                                                                                                                                                                                                                                   |
 
 The code, which is [hosted on GitHub](https://github.com/MineralsCloud/CrystallographyCore.jl), is tested
 using various continuous integration services for its validity.
@@ -51,8 +34,8 @@ julia> import Pkg; Pkg.add("CrystallographyCore")
 
 ## Documentation
 
-- [**STABLE**][docs-stable-url] — **documentation of the most recently tagged version.**
-- [**DEV**][docs-dev-url] — _documentation of the in-development version._
+- [**STABLE**](https://MineralsCloud.github.io/CrystallographyCore.jl/stable/) — **documentation of the most recently tagged version.**
+- [**DEV**](https://MineralsCloud.github.io/CrystallographyCore.jl/dev/) — _documentation of the in-development version._
 
 ## Project status
 

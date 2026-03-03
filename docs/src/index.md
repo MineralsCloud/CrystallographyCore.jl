@@ -1,3 +1,7 @@
+```@meta
+CurrentModule = CrystallographyCore
+```
+
 # CrystallographyCore
 
 Documentation for [CrystallographyCore](https://github.com/MineralsCloud/CrystallographyCore.jl).
