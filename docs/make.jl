@@ -19,6 +19,7 @@ makedocs(;
         "Manual" => [
             "Installation Guide" => "man/installation.md",
             "Definitions and conventions" => "man/definitions.md",
+            "Migration Guide (`v0.3.x` to `v0.7.x`)" => "man/migration-v0.3-to-v0.7.md",
             "Troubleshooting" => "man/troubleshooting.md",
         ],
         "Reference" => Any[

@@ -58,6 +58,7 @@ Pages = [
     "man/installation.md",
     "man/troubleshooting.md",
     "man/definitions.md",
+    "man/migration-v0.3-to-v0.7.md",
     "developers/contributing.md",
     "developers/style-guide.md",
     "developers/design-principles.md",
