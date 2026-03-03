@@ -288,17 +288,5 @@ function Base.transpose(lattice::Lattice)
     )
 end
 
-function Base.convert(::Type{T}, lattice::Lattice) where {T<:AbstractMatrix}
-    eltype_T = eltype(T)
-    eltype_lattice = eltype(lattice)
-    T_promoted = promote_type(eltype_T, eltype_lattice)
-    T_intersect = typeintersect(T_promoted, eltype_lattice)
-    if T_intersect !== Base.Bottom
-        T_promoted = T_intersect
-    end
-    if !(T_promoted <: eltype_T)
-        throw(TypeError(:convert, "promoted type", eltype_T, T_promoted))
-    end
-    C = constructorof(T)
-    return C{T_promoted}(parent(lattice))
-end
+Base.convert(::Type{T}, lattice::Lattice) where {T<:AbstractMatrix} =
+    convert(T, parent(lattice))

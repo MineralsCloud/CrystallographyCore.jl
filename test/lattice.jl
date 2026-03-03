@@ -189,26 +189,26 @@ end
         @test convert(Matrix{Int}, lat_int) isa Matrix{Int}
         @test convert(Matrix{Float64}, lat_int) isa Matrix{Float64}
         @test convert(SMatrix{3,3,Float64}, lat_int) isa SMatrix{3,3,Float64}
-        @test_throws TypeError convert(Matrix{Int}, lat_f64)
-        @test_throws TypeError convert(SMatrix{3,3,Int}, lat_f64)
+        @test_throws InexactError convert(Matrix{Int}, lat_f64)
+        @test_throws InexactError convert(SMatrix{3,3,Int}, lat_f64)
     end
     @testset "Abstract target, concrete lattice" begin
-        @test convert(Matrix{Real}, lat_f64) isa Matrix{Float64}
-        @test convert(Matrix{Number}, lat_int) isa Matrix{Int}
+        @test convert(Matrix{Real}, lat_f64) isa Matrix{Real}
+        @test convert(Matrix{Number}, lat_int) isa Matrix{Number}
         @test convert(Matrix, lat_f64) isa Matrix{Float64}
         @test convert(Matrix, lat_int) isa Matrix{Int}
     end
     @testset "Concrete target, abstract lattice" begin
-        @test_throws TypeError convert(Matrix{Float64}, lat_real)
-        @test_throws TypeError convert(Matrix{Int}, lat_real)
-        @test_throws TypeError convert(Matrix{Float64}, lat_any)
+        @test convert(Matrix{Float64}, lat_real) isa Matrix{Float64}
+        @test convert(Matrix{Int}, lat_real) isa Matrix{Int}
+        @test convert(Matrix{Float64}, lat_any) isa Matrix{Float64}
     end
     @testset "Abstract target, abstract lattice" begin
         @test convert(Matrix{Real}, lat_real) isa Matrix{Real}
         @test convert(Matrix{Any}, lat_any) isa Matrix{Any}
-        @test convert(Matrix{Number}, lat_real) isa Matrix{Real}
-        @test convert(Matrix{Any}, lat_real) isa Matrix{Real}
-        @test_throws TypeError convert(Matrix{Integer}, lat_real)
+        @test convert(Matrix{Number}, lat_real) isa Matrix{Number}
+        @test convert(Matrix{Any}, lat_real) isa Matrix{Any}
+        @test convert(Matrix{Integer}, lat_real) isa Matrix{Integer}
         @test convert(Matrix, lat_real) isa Matrix{Real}
         @test convert(Matrix, lat_any) isa Matrix{Any}
     end
@@ -225,14 +225,14 @@ end
         @test convert(Matrix{Float64}, lat_f32) isa Matrix{Float64}
         @test convert(Matrix{Float32}, lat_i16) isa Matrix{Float32}
         @test convert(Matrix{BigFloat}, lat_bigint) isa Matrix{BigFloat}
-        # Demotion downwards should throw
-        @test_throws TypeError convert(Matrix{Float32}, lat_bigfloat)
-        @test_throws TypeError convert(Matrix{Int16}, lat_bigint)
+        # Demotion downwards should succeed without throw because the exact values (2.5 & 2) map cleanly
+        @test convert(Matrix{Float32}, lat_bigfloat) isa Matrix{Float32}
+        @test convert(Matrix{Int16}, lat_bigint) isa Matrix{Int16}
         # Abstract Targets with Concrete Lattice Elements
-        @test convert(Matrix{Real}, lat_f32) isa Matrix{Float32}
-        @test convert(Matrix{Number}, lat_i16) isa Matrix{Int16}
-        @test convert(Matrix{Real}, lat_bigint) isa Matrix{BigInt}
-        @test convert(Matrix{AbstractFloat}, lat_bigfloat) isa Matrix{BigFloat}
+        @test convert(Matrix{Real}, lat_f32) isa Matrix{Real}
+        @test convert(Matrix{Number}, lat_i16) isa Matrix{Number}
+        @test convert(Matrix{Real}, lat_bigint) isa Matrix{Real}
+        @test convert(Matrix{AbstractFloat}, lat_bigfloat) isa Matrix{AbstractFloat}
     end
 end
 
