@@ -14,6 +14,22 @@ Base.inv(inverted::Inverted) = inverted.lattice
 
 (lattice::AbstractLattice)(reduced::AbstractVector) = parent(lattice) * reduced
 
+@inline _is_wrapper_same(::Type{S}, ::Type{T}) where {S,T} =
+    constructorof(S) === constructorof(T)
+
+function Base.:*(
+    inverted::Inverted{S}, lattice::T
+) where {S<:AbstractLattice,T<:AbstractLattice}
+    _is_wrapper_same(S, T) || throw(ArgumentError("lattice types must match!"))
+    return parent(inverted.lattice) \ parent(lattice)
+end
+function Base.:*(
+    lattice::S, inverted::Inverted{T}
+) where {S<:AbstractLattice,T<:AbstractLattice}
+    _is_wrapper_same(S, T) || throw(ArgumentError("lattice types must match!"))
+    return parent(lattice) / parent(inverted.lattice)
+end
+
 abstract type ChangeOfBasis{T} <: AbstractMatrix{T} end
 
 # Idea from https://spglib.github.io/spglib/definition.html#transformation-to-the-primitive-cell
