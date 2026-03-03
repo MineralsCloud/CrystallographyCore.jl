@@ -288,5 +288,10 @@ function Base.transpose(lattice::Lattice)
     )
 end
 
+Base.isapprox(lattice::Lattice, A::AbstractMatrix; kwargs...) =
+    isapprox(parent(lattice), A; kwargs...)
+Base.isapprox(A::AbstractMatrix, lattice::Lattice; kwargs...) =
+    isapprox(lattice, A; kwargs...)
+
 Base.convert(::Type{T}, lattice::Lattice) where {T<:AbstractMatrix} =
     convert(T, parent(lattice))
