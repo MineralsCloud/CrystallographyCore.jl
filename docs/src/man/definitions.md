@@ -2,7 +2,7 @@
 
 ```@contents
 Pages = ["definitions.md"]
-Depth = 2
+Depth = 2:3
 ```
 
 ## Basis vectors
