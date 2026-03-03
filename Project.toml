@@ -10,10 +10,12 @@ StaticArrays = "90137ffa-7385-5640-81b9-e52037218182"
 StructEquality = "6ec83bb0-ed9f-11e9-3b4c-2b04cb4e219c"
 
 [weakdeps]
+Spglib = "f761d5c5-86db-4880-b97f-9680a7cccfb5"
 Unitful = "1986cc42-f94f-5a68-af5c-568840ba703d"
 UnitfulLinearAlgebra = "c14bd059-d406-4571-8f61-9bd20e53c30b"
 
 [extensions]
+SpglibExt = "Spglib"
 UnitfulExt = "Unitful"
 UnitfulLinearAlgebraExt = ["Unitful", "UnitfulLinearAlgebra"]
 
