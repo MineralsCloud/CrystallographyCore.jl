@@ -1,7 +1,7 @@
 name = "CrystallographyCore"
 uuid = "80545937-1184-4bc9-b283-396e91386b5c"
-authors = ["singularitti <singularitti@outlook.com> and contributors"]
 version = "0.7.0"
+authors = ["singularitti <singularitti@outlook.com> and contributors"]
 
 [deps]
 ConstructionBase = "187b0558-2788-49d3-abe0-74a17ed4e7c9"
@@ -22,6 +22,7 @@ UnitfulLinearAlgebraExt = ["Unitful", "UnitfulLinearAlgebra"]
 [compat]
 ConstructionBase = "1.6.0"
 LinearAlgebra = "1"
+Spglib = "1"
 StaticArrays = "1"
 StructEquality = "1, 2"
 UnitfulLinearAlgebra = "0.3.2, 0.4, 0.5"
