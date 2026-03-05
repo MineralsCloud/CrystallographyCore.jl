@@ -1,6 +1,6 @@
 name = "CrystallographyCore"
 uuid = "80545937-1184-4bc9-b283-396e91386b5c"
-version = "0.7.0"
+version = "0.7.1"
 authors = ["singularitti <singularitti@outlook.com> and contributors"]
 
 [deps]
