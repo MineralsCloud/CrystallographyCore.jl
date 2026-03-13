@@ -62,8 +62,8 @@ atomtypes(cell::Cell) = unique(cell.atoms)
 Return a dictionary mapping each distinct atom value in `cell.atoms`
 to the number of occurrences in the cell.
 
-Examples
-```julia
+# Examples
+```julia-repl
 julia> cell = Cell(rand(3, 3), [rand(3) for _ in 1:4], [:C, :O, :C, :H])
 
 julia> atomcounts(cell)
