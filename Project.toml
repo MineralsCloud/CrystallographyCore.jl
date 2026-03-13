@@ -20,7 +20,7 @@ UnitfulExt = "Unitful"
 UnitfulLinearAlgebraExt = ["Unitful", "UnitfulLinearAlgebra"]
 
 [compat]
-ConstructionBase = "1.6.0"
+ConstructionBase = "1"
 LinearAlgebra = "1"
 Spglib = "1"
 StaticArrays = "1"
