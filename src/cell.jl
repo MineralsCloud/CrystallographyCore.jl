@@ -42,8 +42,18 @@ function Cell(lattice, positions, atoms)
     return Cell{L,P,T}(lattice, positions, atoms)
 end
 
+"""
+    natoms(cell::Cell)
+
+Return the number of atoms contained in `cell`.
+"""
 natoms(cell::Cell) = length(cell.atoms)
 
+"""
+    atomtypes(cell::Cell)
+
+Return the distinct atom values present in `cell`.
+"""
 atomtypes(cell::Cell) = unique(cell.atoms)
 
 """
