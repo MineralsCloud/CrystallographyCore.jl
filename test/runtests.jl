@@ -4,6 +4,6 @@ using Test
 @testset "CrystallographyCore.jl" begin
     # Write your tests here.
     include("lattice.jl")
-    include("eachatom.jl")
+    include("atoms.jl")
     include("transform.jl")
 end
