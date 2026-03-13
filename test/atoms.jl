@@ -20,4 +20,11 @@
         @test atom == atom′
         @test position == position′
     end
+    @test natoms(cell) == length(atoms)
+    counts = atomcounts(cell)
+    @test sum(values(counts)) == natoms(cell)
+    types = atomtypes(cell)
+    @test length(keys(counts)) == length(types)
+    @test sort(collect(keys(counts))) == sort(types)
+    @test length(types) <= natoms(cell)
 end
