@@ -3,7 +3,7 @@ using StructEquality: @struct_hash_equal_isequal
 
 import StaticArrays: similar_type
 
-export ReducedCoordinates, CrystalCoordinates, Cell, natoms, atomtypes
+export ReducedCoordinates, CrystalCoordinates, Cell, natoms, atomtypes, atomcounts
 
 struct ReducedCoordinates{T} <: FieldVector{3,T}
     x::T
@@ -45,6 +45,31 @@ end
 natoms(cell::Cell) = length(cell.atoms)
 
 atomtypes(cell::Cell) = unique(cell.atoms)
+
+"""
+    atomcounts(cell::Cell)
+
+Return a dictionary mapping each distinct atom value in `cell.atoms`
+to the number of occurrences in the cell.
+
+Examples
+```julia
+julia> cell = Cell(rand(3, 3), [rand(3) for _ in 1:4], [:C, :O, :C, :H])
+
+julia> atomcounts(cell)
+Dict{Symbol, Int64} with 3 entries:
+  :H => 1
+  :O => 1
+  :C => 2
+```
+"""
+function atomcounts(cell::Cell)
+    counts = Dict{eltype(cell.atoms),Int64}()
+    for atom in cell.atoms
+        counts[atom] = get(counts, atom, 0) + 1
+    end
+    return counts
+end
 
 """
     Lattice(cell::Cell)
