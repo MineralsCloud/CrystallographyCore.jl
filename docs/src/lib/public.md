@@ -37,6 +37,9 @@ reciprocal
 ```@docs
 Cell
 eachatom
+natoms
+atomtypes
+atomcounts
 ```
 
 ### Transformations
