@@ -1,8 +1,8 @@
 export eachatom
 
 struct EachAtom{N,A,B}
-    atoms::NTuple{N,A}
-    positions::NTuple{N,B}
+    atoms::SVector{N,A}
+    positions::SVector{N,B}
 end
 
 """
@@ -10,7 +10,10 @@ end
 
 Create a generator that iterates over the atoms in a `Cell`.
 """
-eachatom(cell::Cell) = EachAtom(Tuple(cell.atoms), Tuple(cell.positions))
+function eachatom(cell::Cell)
+    n = natoms(cell)
+    return EachAtom(SVector{n}(cell.atoms), SVector{n}(cell.positions))
+end
 
 # Similar to https://github.com/JuliaCollections/IterTools.jl/blob/0ecaa88/src/IterTools.jl#L1028-L1032
 function Base.iterate(iter::EachAtom, state=1)
