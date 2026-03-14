@@ -4,6 +4,8 @@ struct EachAtom{N,A,B}
     atoms::SVector{N,A}
     positions::SVector{N,B}
 end
+EachAtom(atoms::AbstractVector, positions::AbstractVector) =
+    EachAtom(SVector{length(atoms)}(atoms), SVector{length(positions)}(positions))
 
 """
     eachatom(cell::Cell)
